@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Revo.Application\Revo.Application.csproj" />
+    <ProjectReference Include="..\Revo.Domain\Revo.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
