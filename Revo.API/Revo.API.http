@@ -1,6 +1,0 @@
-@Revo.API_HostAddress = http://localhost:5087
-
-GET {{Revo.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Revo.Domain\Revo.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Contracts\Data\" />
-  </ItemGroup>
-
 </Project>

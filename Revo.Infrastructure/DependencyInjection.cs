@@ -1,0 +1,46 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Revo.Application.Contracts;
+using Revo.Application.Contracts.Repositories;
+using Revo.Infrastructure.Database;
+using Revo.Infrastructure.Identity;
+using Revo.Infrastructure.Implementations;
+using Revo.Infrastructure.Repos;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Revo.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
+        {
+            // 1. Database Configuration
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+            // 2. Identity Configuration (Core Only - No Web Dependencies)
+            services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 8;
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // 3. Repositories & Unit of Work Registration
+            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+            return services;
+        }
+    }
+}
