@@ -1,6 +1,6 @@
 ﻿namespace Revo.Domain;
 
-public class Class1
+public class DomainMarker
 {
 
 }
