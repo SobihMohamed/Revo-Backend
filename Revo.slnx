@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Revo.API/Revo.API.csproj" />
+  <Project Path="Revo.Application/Revo.Application.csproj" />
+  <Project Path="Revo.Domain/Revo.Domain.csproj" />
+  <Project Path="Revo.Infrastructure/Revo.Infrastructure.csproj" />
+  <Project Path="Revo.UnitTests/Revo.UnitTests.csproj" />
+</Solution>
