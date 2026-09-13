@@ -14,12 +14,12 @@ namespace Revo.API.Controllers
         {
             _sender = sender;
         }
-        // 1 - handle queries and created commands
+        // 1 - handle queries and created commands return data
         protected IActionResult HandleResult<T>(Result<T> result)
         {
             if(result.IsSuccess)
             {
-                return Ok(ApiResponse<T>.Success(result.Value));
+                return Ok(ApiResponse<T>.Success(result.Value!));
             }
             return ProcessFailure(result);
         }
