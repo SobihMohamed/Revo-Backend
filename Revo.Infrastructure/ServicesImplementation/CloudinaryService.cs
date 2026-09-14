@@ -17,7 +17,7 @@ namespace Revo.Infrastructure.ServicesImplementation
             var account = new Account(cloudinarySettings.Value.CloudName, cloudinarySettings.Value.ApiKey, cloudinarySettings.Value.ApiSecret);
             _cloudinary = new Cloudinary(account);
         }
-        public async Task<UploadReturnedDto?> UploadFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default)
+        public async Task<Application.Abstraction.Services.UploadResult?> UploadFileAsync(Stream fileStream, string fileName, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Revo.Infrastructure.ServicesImplementation
                     return null;
                 }
 
-                return new UploadReturnedDto(result.SecureUrl.ToString(), result.PublicId);
+                return new Application.Abstraction.Services.UploadResult(result.SecureUrl.ToString(), result.PublicId);
             }
             catch (Exception ex)
             {
@@ -46,7 +46,7 @@ namespace Revo.Infrastructure.ServicesImplementation
             }
         }
 
-        public async Task<IEnumerable<UploadReturnedDto>> UploadFilesAsync(IEnumerable<(Stream fileStream, string fileName)> files, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Application.Abstraction.Services.UploadResult>> UploadFilesAsync(IEnumerable<(Stream fileStream, string fileName)> files, CancellationToken cancellationToken = default)
         {
             var tasks = files.Select(file => UploadFileAsync(file.fileStream, file.fileName, cancellationToken));
 
