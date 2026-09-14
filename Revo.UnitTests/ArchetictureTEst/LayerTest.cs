@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NetArchTest.Rules;
-namespace Revo.UnitTests.Archeticture
+namespace Revo.UnitTests.ArchetictureTest
 {
     public class LayerTest
     {
@@ -52,7 +52,7 @@ namespace Revo.UnitTests.Archeticture
         public void InfrastructureLayer_ShouldDependOnlyOnDomainAndApplicationLayers()
         {
             // Arrange
-            var assembly = typeof(Infrastructure.Class1).Assembly;
+            var assembly = typeof(Revo.Infrastructure.ServicesImplementation.CloudinaryService).Assembly;
             var otherLayers = new[]
             {
                 API
