@@ -1,4 +1,5 @@
 using Revo.API.GlobalHandler;
+using Revo.Application;
 using Revo.Infrastructure;
 using Scalar.AspNetCore;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Services Registration
 builder.Services.AddControllers(); 
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
+builder.Services.AddApplicationDependencies();
 builder.Services.AddOpenApi();
 // Add the global exception handler and problem details services
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

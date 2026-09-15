@@ -9,10 +9,10 @@ namespace Revo.API.Controllers
     [Route("api/[controller]")]
     public class BaseApiControllercs : ControllerBase
     {
-        private readonly ISender _sender;
+        protected readonly ISender Sender;
         public BaseApiControllercs(ISender sender)
         {
-            _sender = sender;
+            Sender = sender;
         }
         // 1 - handle queries and created commands return data
         protected IActionResult HandleResult<T>(Result<T> result)
