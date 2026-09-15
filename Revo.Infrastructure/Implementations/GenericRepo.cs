@@ -1,9 +1,6 @@
 ﻿using Ardalis.Specification.EntityFrameworkCore;
 using Revo.Application.Contracts.Repositories;
 using Revo.Infrastructure.Database;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Revo.Infrastructure.Repos
 {
