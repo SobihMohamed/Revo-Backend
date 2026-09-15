@@ -11,11 +11,12 @@ namespace Revo.Domain.Shared
         public Error Error { get;}
         protected internal Result(bool isSuccess, Error error)
         {
-            if (IsSuccess && Error != null)
+            if (isSuccess && error != Error.None)
                 throw new InvalidOperationException("Result is successful but has an error.");
-            if(!IsSuccess && Error != null)
+
+            if (!isSuccess && error == Error.None)
                 throw new InvalidOperationException("Result is failed but has no error.");
-        
+
             IsSuccess = isSuccess;
             Error = error;
         }
