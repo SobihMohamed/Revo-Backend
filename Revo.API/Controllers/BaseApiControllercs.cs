@@ -23,7 +23,18 @@ namespace Revo.API.Controllers
             }
             return ProcessFailure(result);
         }
-        // 2- jandle queries and commands not returned data 
+        // 2 - handle queries and created commands return data with mapping to DTO
+        protected IActionResult HandleResult<TIn, TOut>(Result<TIn> result, Func<TIn, TOut> mapper)
+        {
+            if (result.IsSuccess)
+            {
+                var responseData = mapper(result.Value!);
+                return Ok(new { statusCode = 200, isSuccess = true, message = "Operation completed successfully", data = responseData, errors = (object?)null });
+            }
+
+            return ProcessFailure(result);
+        }
+        // 3 - jandle queries and commands not returned data 
         protected IActionResult HandleResult(Result result)
         {
             if (result.IsSuccess)
