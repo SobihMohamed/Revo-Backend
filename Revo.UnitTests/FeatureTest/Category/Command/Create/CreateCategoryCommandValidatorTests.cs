@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Revo.UnitTests.FeatureTest.Category
+namespace Revo.UnitTests.FeatureTest.Category.Command.Create
 {
     public class CreateCategoryCommandValidatorTests
     {
