@@ -4,7 +4,7 @@ using Revo.Application.Contracts.Repositories;
 using Revo.Application.Dto;
 using Revo.Application.Features.Categories.Commands.Create;
 
-namespace Revo.UnitTests.FeatureTest.Category
+namespace Revo.UnitTests.FeatureTest.Category.Command.Create
 {
     public class CreateCategoryCommandHandlerTests
     {
