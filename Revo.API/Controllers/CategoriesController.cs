@@ -28,7 +28,7 @@ namespace Revo.API.Controllers
             var result = await Sender.Send(command, cancellationToken);
 
             // 3. Return
-            return HandleResult(result ,id => new ActionResponse(id));
+            return HandleResult<Guid, ActionResponse>(result ,id => new ActionResponse(id));
         }
         [HttpPut("{id:guid}")] 
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromForm] UpdateCategoryRequest request, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace Revo.API.Controllers
             var result = await Sender.Send(command, cancellationToken);
 
             // 3. Return
-            return HandleResult(result,id => new ActionResponse(id));
+            return HandleResult<Guid, ActionResponse>(result,id => new ActionResponse(id));
         }
     }
 }
