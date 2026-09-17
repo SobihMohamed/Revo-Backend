@@ -14,12 +14,13 @@ namespace Revo.Infrastructure.Database.Configuration
             builder.ToTable("PortfolioMedia");
             builder.HasKey(m => m.Id);
 
-            builder.Property(m => m.MediaUrl).IsRequired().HasMaxLength(500);
+            builder.Property(x => x.MediaUrl).IsRequired().HasMaxLength(500);
+            builder.Property(x => x.MediaPublicId).IsRequired().HasMaxLength(255);
 
-            builder.Property(m => m.CoverImageUrl).HasMaxLength(500).IsRequired(false);
+            builder.Property(x => x.CoverImageUrl).HasMaxLength(500);
+            builder.Property(x => x.CoverImagePublicId).HasMaxLength(255);
 
-            builder.Property(m => m.Type).IsRequired(); 
-            builder.Property(m => m.OrderIndex).HasDefaultValue(0);
+            builder.Property(x => x.OrderIndex).HasDefaultValue(0); builder.Property(m => m.Type).IsRequired(); 
         }
     }
 }

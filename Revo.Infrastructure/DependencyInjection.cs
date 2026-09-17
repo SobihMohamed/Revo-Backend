@@ -2,12 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts;
 using Revo.Application.Contracts.Repositories;
 using Revo.Infrastructure.Database;
 using Revo.Infrastructure.Identity;
 using Revo.Infrastructure.Implementations;
 using Revo.Infrastructure.Repos;
+using Revo.Infrastructure.ServicesImplementation;
+using Revo.Infrastructure.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,7 +41,9 @@ namespace Revo.Infrastructure
             // 3. Repositories & Unit of Work Registration
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+            services.AddScoped<IUploadService, CloudinaryService>();
+            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
 
             return services;
         }
