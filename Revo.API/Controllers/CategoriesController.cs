@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Revo.API.Extention;
+using Revo.API.Requests;
 using Revo.API.Requests.Category;
 using Revo.API.Response.Commands;
 using Revo.Application.Features.Categories.Commands.Create;
 using Revo.Application.Features.Categories.Commands.Delete;
 using Revo.Application.Features.Categories.Commands.Update;
-using System.Reflection;
+using Revo.Application.Features.Categories.Queries.GetAll;  
 
 namespace Revo.API.Controllers
 {
@@ -14,6 +15,15 @@ namespace Revo.API.Controllers
     {
         public CategoriesController(ISender sender) : base(sender)
         {
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] PaginationRequest request, CancellationToken cancellationToken)
+        {
+            var query = new GetAllCategoriesQuery(request.PageIndex, request.PageSize);
+
+            var result = await Sender.Send(query, cancellationToken);
+
+            return HandleResult(result);
         }
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateCategoryRequest request, CancellationToken cancellationToken)
