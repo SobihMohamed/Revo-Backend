@@ -1,3 +1,4 @@
+using Revo.API.Extentions;
 using Revo.API.GlobalHandler;
 using Revo.Application;
 using Revo.Infrastructure;
@@ -28,8 +29,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseExceptionHandler(); 
-
+app.UseExceptionHandler();
+app.UseCustomStatusCodePages();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
