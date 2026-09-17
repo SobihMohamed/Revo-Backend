@@ -10,31 +10,35 @@ namespace Revo.API.Controllers
     public class BaseApiControllercs : ControllerBase
     {
         protected readonly ISender Sender;
+
         public BaseApiControllercs(ISender sender)
         {
             Sender = sender;
         }
+
         // 1 - handle queries and created commands return data
         protected IActionResult HandleResult<T>(Result<T> result)
         {
-            if(result.IsSuccess)
+            if (result.IsSuccess)
             {
                 return Ok(ApiResponse<T>.Success(result.Value!));
             }
             return ProcessFailure(result);
         }
+
         // 2 - handle queries and created commands return data with mapping to DTO
         protected IActionResult HandleResult<TIn, TOut>(Result<TIn> result, Func<TIn, TOut> mapper)
         {
             if (result.IsSuccess)
             {
                 var responseData = mapper(result.Value!);
-                return Ok(new { statusCode = 200, isSuccess = true, message = "Operation completed successfully", data = responseData, errors = (object?)null });
+                return Ok(ApiResponse<TOut>.Success(responseData));
             }
 
             return ProcessFailure(result);
         }
-        // 3 - jandle queries and commands not returned data 
+
+        // 3 - handle queries and commands not returned data 
         protected IActionResult HandleResult(Result result)
         {
             if (result.IsSuccess)
@@ -44,6 +48,7 @@ namespace Revo.API.Controllers
 
             return ProcessFailure(result);
         }
+
         private IActionResult ProcessFailure(Result result)
         {
             if (result.IsSuccess)
@@ -55,19 +60,22 @@ namespace Revo.API.Controllers
                 var validationResponse = ApiResponse<object>.Failure(
                     StatusCodes.Status400BadRequest,
                     "Validation Error",
-                    validationError.ValidationErrors 
+                    validationError.ValidationErrors
                 );
                 return BadRequest(validationResponse);
             }
 
-            // (Domain Errors)
+            var statusCode = result.Error.Code.Contains("NotFound", StringComparison.OrdinalIgnoreCase)
+                ? StatusCodes.Status404NotFound
+                : StatusCodes.Status400BadRequest;
+
             var errorResponse = ApiResponse<object>.Failure(
-                StatusCodes.Status400BadRequest,
-                result.Error.Message,
-                new { result.Error.Code }
+                statusCode,
+                result.Error.Code,
+                result.Error.Message
             );
 
-            return BadRequest(errorResponse);
+            return StatusCode(statusCode, errorResponse);
         }
     }
 }
