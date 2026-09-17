@@ -11,6 +11,7 @@ namespace Revo.Domain.Entities
         public string NameAr { get; set; } = string.Empty;
         public string NameEn { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
+        public string ImagePublicId { get; set; } = string.Empty;
         public int OrderIndex { get; set; }
 
         public ICollection<PortfolioItem> PortfolioItems { get; set; } = new List<PortfolioItem>();
