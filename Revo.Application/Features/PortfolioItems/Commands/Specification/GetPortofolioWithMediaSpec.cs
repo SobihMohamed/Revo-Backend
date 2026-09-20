@@ -9,7 +9,7 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Specification
     {
         public GetPortofolioWithMediaSpec(Guid id)
         {
-            Query.Where(x => x.Id == id && x.IsDeleted == false)
+            Query.Where(x => x.Id == id)
                  .Include(x => x.MediaItems);
         }
     }
