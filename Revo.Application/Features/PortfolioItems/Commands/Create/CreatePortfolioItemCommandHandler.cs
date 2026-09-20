@@ -44,7 +44,15 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Create
             try 
             {
                 // 3 - Upload the media items to the cloud storage
-                var uploadsTasks = request.MediaItems.Select(mediaItem => UploadMediaItemsAsync( mediaItem , uploadsPublicIds, cancellationToken)).ToList();
+                var uploadsTasks = request.MediaItems
+                 .Select((mediaItem, index) =>
+                 {
+                     if (mediaItem.OrderIndex == 0)
+                         mediaItem = mediaItem with { OrderIndex = index + 1 };
+
+                     return UploadMediaItemsAsync(mediaItem, uploadsPublicIds, cancellationToken);
+                 })
+                 .ToList();
                 var processedMediaArray = await Task.WhenAll(uploadsTasks);
                 if(processedMediaArray.Any(media => media == null))
                 {
