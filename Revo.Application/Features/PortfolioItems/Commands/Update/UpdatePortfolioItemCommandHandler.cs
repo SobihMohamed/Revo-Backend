@@ -63,12 +63,20 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Update
                 return Result<Guid>.Failure(new Error("System.Error", "An unexpected error occurred."));
             }
         }
-        private void UpdateBasicDetails(PortfolioItem portfolioItem, UpdatePortfolioItemCommand request)
+        private void HandleDeletions(PortfolioItem portfolioItem, List<UpdatePortfolioMediaCommandItem> updatedMediaItems, List<string> publicIdsToDeleteAfterSaveInDb)
         {
-            portfolioItem.CaptionAr = request.CaptionAr;
-            portfolioItem.CaptionEn = request.CaptionEn;
-            portfolioItem.OrderIndex = request.OrderIndex;
-            portfolioItem.CategoryId = request.CategoryId;
+            // Find media items that are in the existing portfolio item but not in the updated list
+            var mediaItemsToDelete = portfolioItem.MediaItems
+                .Where(existingMedia => !updatedMediaItems.Any(updatedMedia => updatedMedia.Id == existingMedia.Id)) // keep only the media items that are not in the updated list
+                .ToList();
+            foreach (var mediaItem in mediaItemsToDelete)
+            {
+                if (!string.IsNullOrEmpty(mediaItem.MediaPublicId))
+                    publicIdsToDeleteAfterSaveInDb.Add(mediaItem.MediaPublicId);
+                if (!string.IsNullOrEmpty(mediaItem.CoverImagePublicId))
+                    publicIdsToDeleteAfterSaveInDb.Add(mediaItem.CoverImagePublicId);
+                portfolioItem.MediaItems.Remove(mediaItem);
+            }
         }
         private async Task<bool> HandleUploadsAndUpdatesAsync(PortfolioItem portfolioItem,  List<UpdatePortfolioMediaCommandItem> updatedMediaItems, ConcurrentBag<string> publicIdsToRollbackIfErrorInDb, CancellationToken cancellationToken)
         {
@@ -129,20 +137,12 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Update
             }
             return mediaEntity;
         }
-        private void HandleDeletions(PortfolioItem portfolioItem, List<UpdatePortfolioMediaCommandItem> updatedMediaItems, List<string> publicIdsToDeleteAfterSaveInDb)
+        private void UpdateBasicDetails(PortfolioItem portfolioItem, UpdatePortfolioItemCommand request)
         {
-            // Find media items that are in the existing portfolio item but not in the updated list
-            var mediaItemsToDelete = portfolioItem.MediaItems
-                .Where(existingMedia => !updatedMediaItems.Any(updatedMedia => updatedMedia.Id == existingMedia.Id)) // keep only the media items that are not in the updated list
-                .ToList();
-            foreach (var mediaItem in mediaItemsToDelete)
-            {
-                if (!string.IsNullOrEmpty(mediaItem.MediaPublicId))
-                    publicIdsToDeleteAfterSaveInDb.Add(mediaItem.MediaPublicId);
-                if (!string.IsNullOrEmpty(mediaItem.CoverImagePublicId))
-                    publicIdsToDeleteAfterSaveInDb.Add(mediaItem.CoverImagePublicId);
-                portfolioItem.MediaItems.Remove(mediaItem);
-            }
+            portfolioItem.CaptionAr = request.CaptionAr;
+            portfolioItem.CaptionEn = request.CaptionEn;
+            portfolioItem.OrderIndex = request.OrderIndex;
+            portfolioItem.CategoryId = request.CategoryId;
         }
         private async Task CleanupCloudinaryAsync(IEnumerable<string> publicIds)
         {
