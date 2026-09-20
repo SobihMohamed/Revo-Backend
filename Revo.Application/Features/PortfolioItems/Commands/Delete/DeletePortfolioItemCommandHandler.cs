@@ -33,6 +33,7 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Delete
 
             if (portfolioItem == null)
                 return Result<bool>.Failure(new Error("PortfolioItemNotFound", "Portfolio item not found."));
+
             var publicIdsToDelete = new List<string>();
             foreach (var media in portfolioItem.MediaItems)
             {
@@ -42,12 +43,14 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Delete
                 if (!string.IsNullOrEmpty(media.CoverImagePublicId))
                     publicIdsToDelete.Add(media.CoverImagePublicId);
             }
+
             await _portfolioRepo.DeleteAsync(portfolioItem);
 
             await _unitOfWork.SaveChanges(cancellationToken);
+
             if (publicIdsToDelete.Any())
                 await _uploadService.DeleteFilesAsync(publicIdsToDelete);
-        
+
             return Result<bool>.Success(true);
         }
     }
