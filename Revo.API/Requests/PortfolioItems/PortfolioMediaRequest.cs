@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Formatters;
+﻿
+using Revo.Domain.Enums;
 
 namespace Revo.API.Requests.PortfolioItems
 {

@@ -1,4 +1,6 @@
-﻿namespace Revo.API.Requests.PortfolioItems
+﻿using Revo.Domain.Enums;
+
+namespace Revo.API.Requests.PortfolioItems
 {
     public class CreatePortfolioItemRequest
     {
