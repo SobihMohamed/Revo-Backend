@@ -1,7 +1,6 @@
-﻿
-using Revo.Domain.Enums;
+﻿using Revo.Domain.Enums;
 
-namespace Revo.API.Requests.PortfolioItems
+namespace Revo.API.Requests.PortfolioItems.Create
 {
     public class PortfolioMediaRequest
     {

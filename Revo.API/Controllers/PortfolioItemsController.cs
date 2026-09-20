@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Revo.API.Extention;
-using Revo.API.Requests.PortfolioItems;
+using Revo.API.Requests.PortfolioItems.Create;
 using Revo.API.Response.Commands;
 using Revo.API.Resposes;
 using Revo.Application.Features.PortfolioItems.Commands.Create;
