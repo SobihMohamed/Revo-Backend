@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Revo.Application.Features.PortfolioItems.Commands.Specification
+namespace Revo.Application.Features.PortfolioItems.Specification
 {
     public class GetPortofolioWithMediaSpec : Specification<Domain.Entities.PortfolioItem>
     {

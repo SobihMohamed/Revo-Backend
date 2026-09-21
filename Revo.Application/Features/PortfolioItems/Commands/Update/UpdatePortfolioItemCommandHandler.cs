@@ -1,7 +1,7 @@
 ﻿using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts;
 using Revo.Application.Contracts.Repositories;
-using Revo.Application.Features.PortfolioItems.Commands.Specification;
+using Revo.Application.Features.PortfolioItems.Specification;
 using Revo.Domain.Entities;
 using Revo.Domain.Enums;
 using Revo.Domain.Shared;
