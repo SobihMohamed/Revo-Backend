@@ -11,6 +11,7 @@ using Revo.Application.Features.PortfolioItems.Commands.Delete;
 using Revo.Application.Features.PortfolioItems.Commands.Update;
 using Revo.Application.Features.PortfolioItems.Dto;
 using Revo.Application.Features.PortfolioItems.Queries.GetAll;
+using Revo.Application.Features.PortfolioItems.Queries.GetById;
 using Revo.Application.Features.PortfolioItems.Queries.Helper;
 
 namespace Revo.API.Controllers
@@ -92,15 +93,23 @@ namespace Revo.API.Controllers
 
             return HandleResult(result);
         }
-        // =================================================================
-        // 4. Get All Endpoint (List with Pagination & Filters)
-        // =================================================================
+
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<PaginationResponse<PortfolioItemListDto>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PortfolioItemSpecParams specParams, CancellationToken cancellationToken)
         {
             var query = new GetAllPortfolioItemsQuery(specParams);
+            var result = await Sender.Send(query, cancellationToken);
+
+            return HandleResult(result);
+        }
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<PortfolioItemDetailsDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var query = new GetPortfolioItemByIdQuery(id);
             var result = await Sender.Send(query, cancellationToken);
 
             return HandleResult(result);
