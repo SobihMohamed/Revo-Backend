@@ -25,7 +25,7 @@ namespace Revo.Application.Features.Categories.Specifications
                 c.NameEn,
                 c.ImageUrl,
                 c.OrderIndex,
-                c.PortfolioItems.Count(p => !p.IsDeleted) 
+                c.PortfolioItems.Count() 
             ));
         }
     }

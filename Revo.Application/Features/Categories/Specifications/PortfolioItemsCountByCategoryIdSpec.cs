@@ -11,7 +11,7 @@ namespace Revo.Application.Features.Categories.Specifications
     {
         public PortfolioItemsCountByCategoryIdSpec(Guid categoryId)
         {
-            Query.Where(p => p.CategoryId == categoryId && !p.IsDeleted);
+            Query.Where(p => p.CategoryId == categoryId);
         }
     }
 }

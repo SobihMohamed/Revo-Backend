@@ -364,9 +364,6 @@ namespace Revo.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("OrderIndex")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -404,9 +401,6 @@ namespace Revo.Infrastructure.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("MediaPublicId")
                         .IsRequired()

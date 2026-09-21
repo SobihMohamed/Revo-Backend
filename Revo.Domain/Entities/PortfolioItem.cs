@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Revo.Domain.Entities
 {
-    public class PortfolioItem : AuditableEntity<Guid>, ISoftDeletable
+    public class PortfolioItem : AuditableEntity<Guid>
     {
         public string CaptionAr { get; set; } = string.Empty;
         public string CaptionEn { get; set; } = string.Empty;
@@ -15,6 +15,5 @@ namespace Revo.Domain.Entities
         public Category Category { get; set; } = null!;
 
         public ICollection<PortfolioMedia> MediaItems { get; set; } = new List<PortfolioMedia>();
-        public bool IsDeleted {  get; set; } = false;
     }
 }

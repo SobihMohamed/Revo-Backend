@@ -13,7 +13,7 @@ namespace Revo.Application.Features.Categories.Specifications
         public PortfolioItemsSnippetSpec(Guid categoryId, int pageIndex, int pageSize)
         {
             Query
-                .Where(p => p.CategoryId == categoryId && !p.IsDeleted)
+                .Where(p => p.CategoryId == categoryId)
                 .OrderBy(p => p.OrderIndex)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
