@@ -232,6 +232,12 @@ namespace Revo.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("NameAr")
+                        .IsUnique();
+
+                    b.HasIndex("NameEn")
+                        .IsUnique();
+
                     b.ToTable("Categories", (string)null);
                 });
 
@@ -468,9 +474,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("NameAr")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -493,6 +496,12 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NameAr")
+                        .IsUnique();
+
+                    b.HasIndex("NameEn")
+                        .IsUnique();
 
                     b.ToTable("Services", (string)null);
                 });

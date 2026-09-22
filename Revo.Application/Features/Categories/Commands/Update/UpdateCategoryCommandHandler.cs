@@ -1,5 +1,6 @@
 ﻿using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts.Repositories;
+using Revo.Application.Features.Categories.Specifications;
 using Revo.Domain.Entities;
 using Revo.Domain.Shared;
 using System;
@@ -11,17 +12,25 @@ namespace Revo.Application.Features.Categories.Commands.Update
 {
     public class UpdateCategoryCommandHandler : ICommandHandler<UpdateCategoryCommand, Guid>
     {
-        private readonly IGenericRepo<Category> _genericRepo;
+        private readonly IGenericRepo<Category> _categoryRepo;
         private readonly IUploadService _uploadService;
         public UpdateCategoryCommandHandler(IGenericRepo<Category> genericRepo , IUploadService uploadService) 
         {
-            _genericRepo = genericRepo;
+            _categoryRepo = genericRepo;
             _uploadService = uploadService;
         }
         public async Task<Result<Guid>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
+            // heck Duplicate Name 
+            var spec = new CategoryByNameSpecification(request.NameAr, request.NameEn, request.Id);
+            var duplicateCategory = await _categoryRepo.FirstOrDefaultAsync(spec, cancellationToken);
+
+            if (duplicateCategory != null)
+            {
+                return Result<Guid>.Failure(new Error("Category.DuplicateName", "The category name (in Arabic or English) is already registered."));
+            }
             // 1 - use specification to get the category by id
-            var category = await _genericRepo.GetByIdAsync(request.Id,cancellationToken);
+            var category = await _categoryRepo.GetByIdAsync(request.Id,cancellationToken);
             if(category == null)
                 return Result<Guid>.Failure(new Error("Category.NotFound","Category not found"));
             // 2 - update the category properties
@@ -36,7 +45,7 @@ namespace Revo.Application.Features.Categories.Commands.Update
                 // Upload the new image
                 var uploadResult = await _uploadService.UploadFileAsync(request.ImageUploadDto.Content, request.ImageUploadDto.FileName, cancellationToken);
                 if (uploadResult == null)
-                    return Result<Guid>.Failure(new Error("ImageUpload.Failed", "Image upload failed"));
+                    return Result<Guid>.Failure(new Error("Image.UploadFailed", "Image upload failed"));
                 // Store the old image public ID for deletion
                 oldImagePublicId = category.ImagePublicId;
                 // Update the category with the new image details
@@ -44,7 +53,7 @@ namespace Revo.Application.Features.Categories.Commands.Update
                 category.ImagePublicId = uploadResult.PublicId;
             }
             // 4 - delete the old image if it exists
-            await _genericRepo.UpdateAsync(category, cancellationToken);
+            await _categoryRepo .UpdateAsync(category, cancellationToken);
             // 5 - save the updated category
             if (oldImagePublicId != null)
                 await _uploadService.DeleteFileAsync(oldImagePublicId);
