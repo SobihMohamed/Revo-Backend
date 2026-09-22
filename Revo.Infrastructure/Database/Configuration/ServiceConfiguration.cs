@@ -11,6 +11,9 @@ namespace Revo.Infrastructure.Database.Configuration
             builder.ToTable("Services");
             builder.HasKey(s => s.Id);
 
+            builder.HasIndex(s => s.NameAr).IsUnique();
+            builder.HasIndex(s => s.NameEn).IsUnique();
+
             builder.Property(s => s.NameAr).IsRequired().HasMaxLength(150);
             builder.Property(s => s.NameEn).IsRequired().HasMaxLength(150);
 
