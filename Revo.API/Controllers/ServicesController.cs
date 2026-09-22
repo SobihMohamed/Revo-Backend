@@ -4,9 +4,13 @@ using Revo.API.Extention;
 using Revo.API.Requests.Service;
 using Revo.API.Response.Commands;
 using Revo.API.Resposes;
+using Revo.Application.Common.Pagination;
 using Revo.Application.Features.Services.Commands.Create;
 using Revo.Application.Features.Services.Commands.Delete;
 using Revo.Application.Features.Services.Commands.Update;
+using Revo.Application.Features.Services.Dto;
+using Revo.Application.Features.Services.Queries.GetAll;
+using Revo.Application.Features.Services.Queries.Helper;
 
 namespace Revo.API.Controllers
 {
@@ -71,6 +75,14 @@ namespace Revo.API.Controllers
 
             return HandleResult(result);
         }
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginationResponse<ServiceDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll([FromQuery] ServiceSpecParams specParams, CancellationToken cancellationToken)
+        {
+            var query = new GetAllServicesQuery(specParams);
+            var result = await Sender.Send(query, cancellationToken);
 
+            return HandleResult(result);
+        }
     }
 }
