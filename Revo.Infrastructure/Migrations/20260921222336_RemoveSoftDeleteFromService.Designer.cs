@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Revo.Infrastructure.Database;
 
@@ -11,9 +12,11 @@ using Revo.Infrastructure.Database;
 namespace Revo.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260921222336_RemoveSoftDeleteFromService")]
+    partial class RemoveSoftDeleteFromService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,12 +234,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NameAr")
-                        .IsUnique();
-
-                    b.HasIndex("NameEn")
-                        .IsUnique();
 
                     b.ToTable("Categories", (string)null);
                 });
@@ -496,12 +493,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NameAr")
-                        .IsUnique();
-
-                    b.HasIndex("NameEn")
-                        .IsUnique();
 
                     b.ToTable("Services", (string)null);
                 });

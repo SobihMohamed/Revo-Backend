@@ -3,7 +3,7 @@ using System;
 
 namespace Revo.Domain.Entities
 {
-    public class Service : AuditableEntity<Guid>, ISoftDeletable
+    public class Service : AuditableEntity<Guid>
     {
         public string NameAr { get; set; } = string.Empty;
         public string NameEn { get; set; } = string.Empty;
@@ -14,6 +14,5 @@ namespace Revo.Domain.Entities
         public string ImagePublicId { get; set; } = string.Empty; 
 
         public int OrderIndex { get; set; }
-        public bool IsDeleted { get; set; } = false;
     }
 }
