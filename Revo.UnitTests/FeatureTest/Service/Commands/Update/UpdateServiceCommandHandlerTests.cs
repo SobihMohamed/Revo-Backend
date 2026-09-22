@@ -109,12 +109,11 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
                 .ThrowsAsync(new Exception("Database connection failed"));
 
             // Act
-            await Assert.ThrowsAsync<Exception>(async () =>
-            {
-                await _handler.Handle(command, CancellationToken.None);
-            });
+            var result = await _handler.Handle(command, CancellationToken.None);
 
             // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Service.UpdateFailed", result.Error.Code);
             _uploadServiceMock.Verify(u => u.DeleteFileAsync("new_pic_456"), Times.Once);
 
             _uploadServiceMock.Verify(u => u.DeleteFileAsync("old_pic_123"), Times.Never);

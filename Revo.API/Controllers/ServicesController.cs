@@ -5,6 +5,7 @@ using Revo.API.Requests.Service;
 using Revo.API.Response.Commands;
 using Revo.API.Resposes;
 using Revo.Application.Features.Services.Commands.Create;
+using Revo.Application.Features.Services.Commands.Delete;
 using Revo.Application.Features.Services.Commands.Update;
 
 namespace Revo.API.Controllers
@@ -58,6 +59,17 @@ namespace Revo.API.Controllers
 
             // 3. Handle Result
             return HandleResult<Guid, ActionResponse>(result, updatedId => new ActionResponse(updatedId));
+        }
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var command = new DeleteServiceCommand(id);
+            var result = await Sender.Send(command, cancellationToken);
+
+            return HandleResult(result);
         }
 
     }

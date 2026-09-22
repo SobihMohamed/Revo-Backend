@@ -59,7 +59,7 @@ namespace Revo.Application.Features.Services.Commands.Update
             {
                 if (!string.IsNullOrEmpty(publicIdToRollback))
                     await _uploadService.DeleteFileAsync(publicIdToRollback);
-                throw;
+                return Result<Guid>.Failure(new Error("Service.UpdateFailed", "Service update failed"));
             }
 
             if (!string.IsNullOrEmpty(publicIdToDelete))
