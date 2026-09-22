@@ -13,6 +13,10 @@ namespace Revo.Infrastructure.Database.Configuration
         {
             builder.ToTable("Categories");
             builder.HasKey(c => c.Id);
+
+            builder.HasIndex(c => c.NameAr).IsUnique();
+            builder.HasIndex(c => c.NameEn).IsUnique();
+
             builder.Property(c => c.ImagePublicId).IsRequired().HasMaxLength(255);
             builder.Property(c => c.NameAr).IsRequired().HasMaxLength(100);
             builder.Property(c => c.NameEn).IsRequired().HasMaxLength(100);

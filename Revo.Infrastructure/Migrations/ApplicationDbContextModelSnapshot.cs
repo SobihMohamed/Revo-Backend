@@ -232,6 +232,12 @@ namespace Revo.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("NameAr")
+                        .IsUnique();
+
+                    b.HasIndex("NameEn")
+                        .IsUnique();
+
                     b.ToTable("Categories", (string)null);
                 });
 
@@ -490,6 +496,12 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NameAr")
+                        .IsUnique();
+
+                    b.HasIndex("NameEn")
+                        .IsUnique();
 
                     b.ToTable("Services", (string)null);
                 });
