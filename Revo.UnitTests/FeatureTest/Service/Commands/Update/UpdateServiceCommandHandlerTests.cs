@@ -5,9 +5,12 @@ using Revo.Application.Contracts;
 using Revo.Application.Contracts.Repositories;
 using Revo.Application.Dto;
 using Revo.Application.Features.Services.Commands.Update;
+using Revo.Application.Features.Services.Specifications; 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
 {
@@ -37,9 +40,33 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
         }
 
         [Fact]
+        public async Task Handle_Should_ReturnFailure_When_ServiceNameIsDuplicate()
+        {
+            // Arrange
+            var command = new UpdateServiceCommand(Guid.NewGuid(), "Ar", "En", "DescAr", "DescEn", 1, null);
+
+            _serviceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ServiceByNameSpecification>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Domain.Entities.Service());
+
+            // Act
+            var result = await _handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("Service.DuplicateName", result.Error.Code);
+
+            _serviceRepoMock.Verify(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+            _uploadServiceMock.Verify(u => u.UploadFileAsync(It.IsAny<Stream>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+            _unitOfWorkMock.Verify(u => u.SaveChanges(It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Fact]
         public async Task Handle_Should_ReturnFailure_When_ServiceDoesNotExist()
         {
             var command = new UpdateServiceCommand(Guid.NewGuid(), "Ar", "En", "DescAr", "DescEn", 1, null);
+
+            _serviceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ServiceByNameSpecification>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Domain.Entities.Service?)null);
 
             _serviceRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Domain.Entities.Service?)null);
@@ -55,6 +82,9 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
         {
             var existingService = new Domain.Entities.Service { Id = Guid.NewGuid(), ImagePublicId = "old_pic" };
             var command = new UpdateServiceCommand(existingService.Id, "Ar", "En", "DescAr", "DescEn", 1, null);
+
+            _serviceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ServiceByNameSpecification>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Domain.Entities.Service?)null);
 
             _serviceRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingService);
@@ -74,8 +104,10 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
         {
             var existingService = new Domain.Entities.Service { Id = Guid.NewGuid(), ImagePublicId = "old_pic_123" };
             var command = new UpdateServiceCommand(existingService.Id, "Ar", "En", "DescAr", "DescEn", 1, CreateDummyImageDto());
+            var uploadResult = new UploadResult("new_url", "new_pic_456");
 
-            var uploadResult = new UploadResult (  "new_url", "new_pic_456" );
+            _serviceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ServiceByNameSpecification>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Domain.Entities.Service?)null);
 
             _serviceRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingService);
@@ -96,8 +128,10 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
         {
             var existingService = new Domain.Entities.Service { Id = Guid.NewGuid(), ImagePublicId = "old_pic_123" };
             var command = new UpdateServiceCommand(existingService.Id, "Ar", "En", "DescAr", "DescEn", 1, CreateDummyImageDto());
+            var uploadResult = new UploadResult("new_url", "new_pic_456");
 
-            var uploadResult = new UploadResult (  "new_url", "new_pic_456" );
+            _serviceRepoMock.Setup(r => r.FirstOrDefaultAsync(It.IsAny<ServiceByNameSpecification>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Domain.Entities.Service?)null);
 
             _serviceRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingService);
@@ -113,9 +147,8 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
 
             // Assert
             Assert.False(result.IsSuccess);
-            Assert.Equal("Service.UpdateFailed", result.Error.Code);
+            Assert.Equal("Service.UpdateFailed", result.Error.Code); 
             _uploadServiceMock.Verify(u => u.DeleteFileAsync("new_pic_456"), Times.Once);
-
             _uploadServiceMock.Verify(u => u.DeleteFileAsync("old_pic_123"), Times.Never);
         }
     }

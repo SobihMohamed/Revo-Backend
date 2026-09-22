@@ -1,6 +1,7 @@
 ﻿using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts;
 using Revo.Application.Contracts.Repositories;
+using Revo.Application.Features.Services.Specifications;
 using Revo.Domain.Entities;
 using Revo.Domain.Shared;
 using System;
@@ -24,6 +25,14 @@ namespace Revo.Application.Features.Services.Commands.Create
         }
         public async Task<Result<Guid>> Handle(CreateServiceCommand request, CancellationToken cancellationToken)
         {
+            var spec = new ServiceByNameSpecification(request.NameAr, request.NameEn);
+
+            var existingService = await _serviceRepo.FirstOrDefaultAsync(spec , cancellationToken);
+
+            if (existingService != null)
+            {
+                return Result<Guid>.Failure(new Error("Service.DuplicateName", "The service name (in Arabic or English) is already registered."));
+            }
             // call the upload service to upload the image and get the image URL
             var UploadResult = await _uploadService.UploadFileAsync(
                 request.UploadDto.Content,
