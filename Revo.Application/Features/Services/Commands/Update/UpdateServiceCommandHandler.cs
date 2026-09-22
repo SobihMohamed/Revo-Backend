@@ -1,6 +1,7 @@
 ﻿using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts;
 using Revo.Application.Contracts.Repositories;
+using Revo.Application.Features.Services.Specifications;
 using Revo.Domain.Entities;
 using Revo.Domain.Shared;
 using System;
@@ -24,6 +25,14 @@ namespace Revo.Application.Features.Services.Commands.Update
         }
         public async Task<Result<Guid>> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
         {
+            var spec = new ServiceByNameSpecification(request.NameAr, request.NameEn, request.Id);
+
+            var existingService = await _serviceRepo.FirstOrDefaultAsync(spec,cancellationToken);
+
+            if (existingService != null)
+            {
+                return Result<Guid>.Failure(new Error("Service.DuplicateName", "The service name (in Arabic or English) is already registered."));
+            }
             // check if service exists
             var service = await _serviceRepo.GetByIdAsync(request.Id, cancellationToken);
             if(service == null)
