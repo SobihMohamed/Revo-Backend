@@ -2,6 +2,7 @@ using Revo.API.Extentions;
 using Revo.API.GlobalHandler;
 using Revo.Application;
 using Revo.Infrastructure;
+using Revo.Infrastructure.Implementations.Notifications;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.UseExceptionHandler();
 app.UseCustomStatusCodePages();
