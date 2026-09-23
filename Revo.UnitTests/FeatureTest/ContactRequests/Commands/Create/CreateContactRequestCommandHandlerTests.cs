@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Moq;
 using Revo.Application.Contracts.Repositories;
-using Revo.Application.Features.ContactRequests.Commands;
+using Revo.Application.Features.ContactRequests.Commands.Create;
 using Revo.Application.Features.ContactRequests.Events;
 using Revo.Domain.Entities;
 using System;

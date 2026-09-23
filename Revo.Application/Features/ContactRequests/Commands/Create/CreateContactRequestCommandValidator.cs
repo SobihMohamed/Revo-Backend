@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Revo.Application.Features.ContactRequests.Commands
+namespace Revo.Application.Features.ContactRequests.Commands.Create
 {
     public class CreateContactRequestCommandValidator : AbstractValidator<CreateContactRequestCommand>
     {
