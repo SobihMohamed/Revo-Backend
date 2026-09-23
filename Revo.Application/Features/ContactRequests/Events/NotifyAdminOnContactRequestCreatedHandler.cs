@@ -5,7 +5,8 @@ using Revo.Application.Contracts.Repositories;
 using Revo.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Revo.Application.Features.ContactRequests.Events
 {
@@ -38,19 +39,25 @@ namespace Revo.Application.Features.ContactRequests.Events
 
             await _notificationRepo.AddAsync(dbNotification, cancellationToken);
 
+            var whatsAppMessage = $"🔔 طلب تواصل جديد!\n" +
+                                  $"👤 الاسم: {request.Name}\n" +
+                                  $"📱 رقم الهاتف: {request.PhoneNumber}\n" +
+                                  $"✉️ الرسالة: {request.Message}";
+
             var notificationMessage = new NotificationMessage
             {
                 NotificationId = dbNotification.Id,
                 TitleAr = dbNotification.TitleAr,
                 TitleEn = dbNotification.TitleEn,
-                MessageAr = dbNotification.MessageAr,
-                MessageEn = dbNotification.MessageEn,
+    
+                MessageAr = whatsAppMessage,
+                MessageEn = whatsAppMessage,
                 TargetUrl = dbNotification.TargetUrl,
-                // whatsApp inside the strategy performed
+
                 Channels = new List<NotificationChannel>
                 {
-                    NotificationChannel.Push,
-                    NotificationChannel.WhatsApp
+                    NotificationChannel.Push, 
+                    NotificationChannel.WhatsApp 
                 }
             };
 
