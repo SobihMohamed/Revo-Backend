@@ -4,10 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts;
+using Revo.Application.Contracts.Notifications;
 using Revo.Application.Contracts.Repositories;
 using Revo.Infrastructure.Database;
 using Revo.Infrastructure.Identity;
 using Revo.Infrastructure.Implementations;
+using Revo.Infrastructure.Implementations.Notifications;
+using Revo.Infrastructure.Implementations.Notifications.Strategies;
 using Revo.Infrastructure.Repos;
 using Revo.Infrastructure.ServicesImplementation;
 using Revo.Infrastructure.Settings;
@@ -37,13 +40,18 @@ namespace Revo.Infrastructure
             })
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.Configure<SiteSettings>(configuration.GetSection("SiteSettings"));
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+            services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
 
             // 3. Repositories & Unit of Work Registration
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddScoped<IUploadService, CloudinaryService>();
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+            services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
+            services.AddScoped<INotificationStrategy, PushNotificationStrategy>();
+            services.AddScoped<INotificationStrategy, TwilioWhatsAppNotificationStrategy>();
 
             return services;
         }
