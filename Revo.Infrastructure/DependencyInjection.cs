@@ -42,6 +42,8 @@ namespace Revo.Infrastructure
             .AddEntityFrameworkStores<ApplicationDbContext>();
             services.Configure<SiteSettings>(configuration.GetSection("SiteSettings"));
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
+            services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
+
             // 3. Repositories & Unit of Work Registration
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -49,6 +51,7 @@ namespace Revo.Infrastructure
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
             services.AddScoped<INotificationStrategy, PushNotificationStrategy>();
+            services.AddScoped<INotificationStrategy, TwilioWhatsAppNotificationStrategy>();
 
             return services;
         }
