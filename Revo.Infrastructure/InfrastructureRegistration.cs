@@ -9,7 +9,6 @@ using Revo.Application.Contracts.Identity;
 using Revo.Infrastructure.Identity;
 using Revo.Infrastructure.ServicesImplementation;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.RateLimiting;
 
@@ -19,7 +18,6 @@ namespace Revo.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,6 +39,14 @@ namespace Revo.Infrastructure
 
             services.AddRateLimiter(options =>
             {
+                options.AddFixedWindowLimiter("LoginPolicy", opt =>
+                {
+                    opt.PermitLimit = 5; 
+                    opt.Window = TimeSpan.FromMinutes(1); 
+                    opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                    opt.QueueLimit = 0;
+                });
+
                 options.AddFixedWindowLimiter("ContactRequestPolicy", opt =>
                 {
                     opt.PermitLimit = 3;
