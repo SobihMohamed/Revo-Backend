@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts;
+using Revo.Application.Contracts.Auth;
+using Revo.Application.Contracts.Identity;
 using Revo.Application.Contracts.Notifications;
 using Revo.Application.Contracts.Repositories;
 using Revo.Infrastructure.Database;
@@ -48,11 +50,11 @@ namespace Revo.Infrastructure
             services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUploadService, CloudinaryService>();
-            services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
             services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
             services.AddScoped<INotificationStrategy, PushNotificationStrategy>();
             services.AddScoped<INotificationStrategy, TwilioWhatsAppNotificationStrategy>();
-
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IIdentityService, IdentityService>();
             return services;
         }
     }
