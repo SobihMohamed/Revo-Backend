@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Revo.API.Requests.ContactRequest;
 using Revo.API.Response.Commands;
 using Revo.API.Resposes;
@@ -25,6 +26,7 @@ namespace Revo.API.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("ContactRequestPolicy")]
         [ProducesResponseType(typeof(ApiResponse<ActionResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateContactRequestApiRequest request, CancellationToken cancellationToken)
