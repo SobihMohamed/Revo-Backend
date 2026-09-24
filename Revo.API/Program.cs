@@ -27,6 +27,8 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
+// Seed Admins Data
+await Revo.Infrastructure.Database.Seeding.AdminSeeder.SeedAsync(app.Services);
 
 // 2. HTTP Request Pipeline
 if (app.Environment.IsDevelopment())

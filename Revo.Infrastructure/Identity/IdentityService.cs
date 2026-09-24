@@ -36,7 +36,7 @@ namespace Revo.Infrastructure.Identity
             {
                 UserId = user.Id.ToString(),
                 UserName = user.FullName ?? user.UserName, 
-                Email = user.Email,
+                Email = user.Email!,
                 Roles = roles
             };
 
@@ -47,7 +47,7 @@ namespace Revo.Infrastructure.Identity
                 Token = tokenResponse.Token,
                 IsAuthenticated = true,
                 ExpireOn = tokenResponse.ExpireOn,
-                Email = user.Email,
+                Email = user.Email!,
                 Name = user.FullName ?? user.UserName, 
                 Roles = roles
             };
