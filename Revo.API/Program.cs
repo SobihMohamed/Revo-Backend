@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 builder.Services.AddApplicationDependencies();
 builder.Services.AddOpenApi();
+
 // Add the global exception handler and problem details services
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -27,10 +28,12 @@ builder.Services.AddCors(options =>
     });
 });
 var app = builder.Build();
-// Seed Admins Data
+
 await Revo.Infrastructure.Database.Seeding.AdminSeeder.SeedAsync(app.Services);
 
-// 2. HTTP Request Pipeline
+app.UseExceptionHandler();
+app.UseCustomStatusCodePages();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -41,14 +44,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapHub<NotificationHub>("/hubs/notifications");
 
-app.UseExceptionHandler();
-app.UseCustomStatusCodePages();
-app.UseCors("AllowFrontend");
 app.UseRouting();
+
+app.UseCors("AllowFrontend");
+
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers(); 
+app.MapControllers();
+app.MapHub<NotificationHub>("/hubs/notifications"); 
+
 app.Run();
