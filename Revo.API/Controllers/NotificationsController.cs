@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Revo.API.Resposes;
 using Revo.Application.Common.Pagination;
+using Revo.Application.Features.Notifications.Commands.MarkAsRead;
 using Revo.Application.Features.Notifications.Dtos;
 using Revo.Application.Features.Notifications.Helper;
 using Revo.Application.Features.Notifications.Queries.GetAll;
@@ -33,6 +34,16 @@ namespace Revo.API.Controllers
         {
             var query = new GetUnreadNotificationsCountQuery();
             var result = await Sender.Send(query, cancellationToken);
+
+            return HandleResult(result);
+        }
+        [HttpPatch("{id:guid}/mark-as-read")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> MarkAsRead(Guid id, CancellationToken cancellationToken)
+        {
+            var command = new MarkNotificationAsReadCommand(id);
+            var result = await Sender.Send(command, cancellationToken);
 
             return HandleResult(result);
         }
