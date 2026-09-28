@@ -3,5 +3,6 @@
   <Project Path="Revo.Application/Revo.Application.csproj" />
   <Project Path="Revo.Domain/Revo.Domain.csproj" />
   <Project Path="Revo.Infrastructure/Revo.Infrastructure.csproj" />
+  <Project Path="Revo.IntegrationTests/Revo.IntegrationTests.csproj" Id="762214cc-7436-4cf6-bd81-ce08f6ecda61" />
   <Project Path="Revo.UnitTests/Revo.UnitTests.csproj" />
 </Solution>
