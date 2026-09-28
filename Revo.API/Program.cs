@@ -8,10 +8,15 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Services Registration
-builder.Services.AddControllers(); 
-builder.Services.AddInfrastructureDependencies(builder.Configuration);
+builder.Services.AddControllers();
+
+
+builder.Services.AddInfrastructureDependencies(builder.Configuration); 
+builder.Services.AddInfrastructureServices(builder.Configuration);    
+
 builder.Services.AddApplicationDependencies();
 builder.Services.AddOpenApi();
+
 
 // Add the global exception handler and problem details services
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -58,3 +63,4 @@ app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications"); 
 
 app.Run();
+public partial class Program { }
