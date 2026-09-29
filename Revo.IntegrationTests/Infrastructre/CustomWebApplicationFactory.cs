@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,11 @@ namespace Revo.IntegrationTests.Infrastructre
                 {
                     options.UseSqlServer(_dbContainer.GetConnectionString());
                 });
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = TestAuthHandler.DefaultScheme;
+                    options.DefaultChallengeScheme = TestAuthHandler.DefaultScheme;
+                }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.DefaultScheme, options => { });
             });
         }
         // to start the container before running tests
