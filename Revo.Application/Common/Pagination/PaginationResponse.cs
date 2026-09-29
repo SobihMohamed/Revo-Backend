@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Revo.Application.Common.Pagination
 {
+
     public class PaginationResponse<TData>
     {
         public int PageIndex { get; set; }
@@ -21,6 +22,9 @@ namespace Revo.Application.Common.Pagination
             PageSize = size;
             TotalCount = total; 
             Data = data;
+        }
+        public PaginationResponse()
+        {
         }
     }
 }
