@@ -9,6 +9,7 @@ using System.Net.Http.Json;
 
 namespace Revo.IntegrationTests.Features.ContactRequest
 {
+    [Collection("SharedTestCollection")]
     public class CreateContactRequestTests : BaseIntegrationTest
     {
         public CreateContactRequestTests(CustomWebApplicationFactory factory) : base(factory)
