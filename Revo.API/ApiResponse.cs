@@ -1,4 +1,4 @@
-﻿namespace Revo.API.Resposes
+﻿    namespace Revo.API.Resposes
 {
     public class ApiResponse<TData>
     {

@@ -44,7 +44,7 @@ namespace Revo.API.Controllers
         }
 
 
-        // [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<PaginationResponse<ContactRequestDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll([FromQuery] ContactRequestSpecParams specParams, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace Revo.API.Controllers
             return HandleResult(result);
         }
 
-        // [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ApiResponse<ContactRequestDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -67,7 +67,7 @@ namespace Revo.API.Controllers
             return HandleResult(result);
         }
 
-        // [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id:guid}/mark-as-read")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

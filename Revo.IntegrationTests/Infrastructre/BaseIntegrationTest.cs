@@ -10,16 +10,18 @@ using System.Text;
 
 namespace Revo.IntegrationTests.Infrastructre
 {
-    public class BaseIntegrationTest : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    [Collection("SharedTestCollection")]
+    public abstract class BaseIntegrationTest : IAsyncLifetime
     {
         private readonly IServiceScope _scope;
+        protected readonly HttpClient HttpClient;
         protected readonly ApplicationDbContext _context;
         protected readonly ISender _sender;
         private Respawner _respawner;
         public BaseIntegrationTest(CustomWebApplicationFactory factory)
         {
             _scope = factory.Services.CreateScope();
-
+            HttpClient = factory.CreateClient();
             // get the required service for the testing 
             _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
             _context = _scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -27,9 +29,12 @@ namespace Revo.IntegrationTests.Infrastructre
 
         public async Task InitializeAsync()
         {
+            // 1. Open the database connection to ensure that the Respawner can access the database.
+            await _context.Database.OpenConnectionAsync();
+
             _respawner = await Respawner.CreateAsync(_context.Database.GetDbConnection(), new RespawnerOptions
             {
-                DbAdapter = DbAdapter.SqlServer,
+                DbAdapter = DbAdapter.SqlServer,// Specify the database adapter (SQL Server in this case)
                 TablesToIgnore = new Respawn.Graph.Table[]
                     {
                      "__EFMigrationsHistory"
