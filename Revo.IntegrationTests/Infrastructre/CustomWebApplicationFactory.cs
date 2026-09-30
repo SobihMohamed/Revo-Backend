@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Revo.Application.Abstraction.Services;
 using Revo.Infrastructure.Database;
+using Revo.IntegrationTests.Infrastructre.FakeExternalService;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,6 +35,14 @@ namespace Revo.IntegrationTests.Infrastructre
 
                 if (descriptor != null)
                     services.Remove(descriptor);
+                
+                // remove the upload service if it exists
+                var uploadServiceDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(IUploadService));
+                if (uploadServiceDescriptor != null)
+                    services.Remove(uploadServiceDescriptor);
+                services.AddScoped<IUploadService, FakeUploadService>();
+
                 // add a new db context with the connection string from the container
                 services.AddDbContext<ApplicationDbContext>(options =>
                 {
