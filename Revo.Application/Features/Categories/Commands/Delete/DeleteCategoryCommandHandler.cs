@@ -1,7 +1,7 @@
 ﻿using Revo.Application.Abstraction.Services;
 using Revo.Application.Contracts.Repositories;
 using Revo.Application.Features.Categories.Commands.Delete;
-using Revo.Application.Features.Categories.Specifications; // 👈 مسار الـ Spec
+using Revo.Application.Features.Categories.Specifications;
 using Revo.Domain.Entities;
 using Revo.Domain.Shared;
 using System;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Revo.Application.Features.Categories.Commands.Delete
 {
-    public class DeleteCategoryCommandValidator : AbstractValidator<Category>
+    public class DeleteCategoryCommandValidator : AbstractValidator<DeleteCategoryCommand>
     {
         public DeleteCategoryCommandValidator()
         {
