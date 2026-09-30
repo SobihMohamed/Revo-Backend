@@ -20,5 +20,6 @@ namespace Revo.API.Requests.Service
 
         [Required]
         public IFormFile Image { get; set; } = null!;
+
     }
 }
