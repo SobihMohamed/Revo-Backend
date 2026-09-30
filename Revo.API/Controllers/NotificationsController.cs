@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Revo.API.Resposes;
 using Revo.Application.Common.Pagination;
@@ -16,7 +17,7 @@ namespace Revo.API.Controllers
         {
         }
 
-        // [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [ProducesResponseType(typeof(ApiResponse<PaginationResponse<NotificationDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll([FromQuery] NotificationSpecParams specParams, CancellationToken cancellationToken)
@@ -27,7 +28,7 @@ namespace Revo.API.Controllers
             return HandleResult(result);
         }
 
-        // [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         [HttpGet("unread-count")]
         [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUnreadCount(CancellationToken cancellationToken)
@@ -37,6 +38,7 @@ namespace Revo.API.Controllers
 
             return HandleResult(result);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id:guid}/mark-as-read")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]

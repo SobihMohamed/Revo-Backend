@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,15 +38,46 @@ namespace Revo.IntegrationTests.Infrastructre
                 {
                     options.UseSqlServer(_dbContainer.GetConnectionString());
                 });
+                services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = TestAuthHandler.DefaultScheme;
+                    options.DefaultChallengeScheme = TestAuthHandler.DefaultScheme;
+                }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.DefaultScheme, options => { });
             });
         }
         // to start the container before running tests
         public async Task InitializeAsync()
         {
-            await _dbContainer.StartAsync(); 
-            using var scope = Services.CreateScope();
+            // 1. Start the Docker SQL Server container first so we have a physical database server running.
+            await _dbContainer.StartAsync();
+
+            // 2. CREATE A MINI-APP (SANDBOX):
+            // We create a temporary, isolated ServiceCollection. 
+            // Why? If we use the main application's DI container (Services.CreateScope()), 
+            // it will trigger Program.cs, which runs the Data Seeders before the tables even exist!
+            var services = new ServiceCollection();
+
+            // 3. Register ONLY what EF Core needs to run migrations (DbContext and Logging).
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(_dbContainer.GetConnectionString()));
+
+            services.AddLogging();
+
+            // 4. Build the temporary Dependency Injection provider.
+            using var provider = services.BuildServiceProvider();
+
+            // 5. Create a scope to resolve scoped services (like ApplicationDbContext).
+            using var scope = provider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            // 6. BUILD THE HOUSE:
+            // Execute the migrations on the empty Docker database. 
+            // Now the tables are created silently without triggering the main application.
             await context.Database.MigrateAsync();
+
+            // Note: Once this method finishes, the actual Integration Test will start, 
+            // triggering the real Program.cs. The Data Seeder will run, find the tables ready, 
+            // and seed the initial data successfully!
         }
 
         // to stop and dispose the container after running tests

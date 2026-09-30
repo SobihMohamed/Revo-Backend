@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Revo.API.Extention;
 using Revo.API.Requests.Service;
@@ -22,6 +23,7 @@ namespace Revo.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<ActionResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromForm] CreateServiceRequest request, CancellationToken cancellationToken)
@@ -40,6 +42,7 @@ namespace Revo.API.Controllers
             return HandleResult<Guid, ActionResponse>(result, id => new ActionResponse(id));
         }
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<ActionResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
@@ -66,6 +69,7 @@ namespace Revo.API.Controllers
             return HandleResult<Guid, ActionResponse>(result, updatedId => new ActionResponse(updatedId));
         }
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
