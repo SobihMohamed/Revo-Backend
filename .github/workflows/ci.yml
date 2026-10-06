@@ -1,44 +1,88 @@
+# The name of this workflow, which will appear in the GitHub Actions tab
 name: Revo CI/CD Pipeline
 
+# Defines the events that will trigger this workflow to run
 on:
+  # Triggers the workflow when someone pushes code to the repository
   push:
+    # Specifically, it only runs for pushes to the 'main' or 'development' branches
     branches: ["main", "development"]
+  # Triggers the workflow when a pull request is opened or updated
   pull_request:
+    # Specifically, it only runs for pull requests targeting these branches
     branches: ["main", "development"]
 
-# إضافة الصلاحيات دي مهمة جداً عشان مكتبة dorny/test-reporter تقدر تكتب التقرير في الـ PR
+# Sets the permissions for the GitHub token used by this workflow
 permissions:
+  # Allows the workflow to read the repository's code files
   contents: read
+  # Allows the workflow to read information about GitHub Actions
   actions: read
+  # Allows the workflow to create or update check runs (needed to show test results in PRs)
   checks: write
 
+# Defines the different jobs (tasks) that this workflow will execute
 jobs:
+  # The name of our single job (you can name this anything you want)
   build-and-test:
+    # The operating system the job will run on (a fresh Linux Ubuntu server)
     runs-on: ubuntu-latest
 
+    # The sequential list of steps (actions or commands) to execute in this job
     steps:
+      # A descriptive name for this step
       - name: 📥 Checkout Code
+        # Uses a pre-built GitHub Action to download your repository's code into the server
         uses: actions/checkout@v4
 
+      # A descriptive name for the .NET setup step
       - name: ⚙️ Setup .NET Core
+        # Uses a pre-built GitHub Action to install the .NET SDK
         uses: actions/setup-dotnet@v4
+        # Provides configuration parameters to the setup-dotnet action
         with:
+          # Specifies that we want to install .NET version 10.0
           dotnet-version: "10.0.x"
 
+      # A descriptive name for the restore step
       - name: 📦 Restore Dependencies
+        # Runs the command to download all required NuGet packages for the project
         run: dotnet restore Revo.slnx
 
+      # A descriptive name for the build step
       - name: 🔨 Build the Solution
+        # Compiles the code in 'Release' mode and skips restoring (since we just did it)
         run: dotnet build Revo.slnx --no-restore --configuration Release
 
-      - name: 🧪 Run Architecture & Unit Tests
-        # ملاحظة: شيلنا /p:Threshold=80 مؤقتاً عشان مفيش Test Cases اتكتبت لسه والبايبلاين ميضربش
+      # A descriptive name for the testing step
+      - name: 🧪 Run All Tests (Unit & Integration)
+        # Runs tests, skips building, saves results as .trx files, and collects code coverage data
         run: dotnet test Revo.slnx --no-build --configuration Release --verbosity normal --logger trx --results-directory "TestResults" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
+      # A descriptive name for the test reporting step
       - name: 📊 Publish Test Report
+        # Uses a third-party action to read test results and display them nicely in the GitHub UI
         uses: dorny/test-reporter@v1
+        # Ensures this step runs even if the previous test step failed (so we can still see the errors)
         if: success() || failure()
+        # Provides configuration parameters to the test-reporter action
         with:
+          # The name of the report that will be displayed in GitHub
           name: .NET Tests Report
+          # The file path where the action should look for the test result files
           path: TestResults/*.trx
+          # Tells the action to parse the files using the .NET TRX format
           reporter: dotnet-trx
+
+      # A descriptive name for the artifact upload step
+      - name: 📈 Upload Code Coverage Artifact
+        # Uses a built-in action to save files so you can download them after the workflow finishes
+        uses: actions/upload-artifact@v4
+        # Ensures this step runs regardless of whether previous steps passed or failed
+        if: always()
+        # Provides configuration parameters to the upload-artifact action
+        with:
+          # The name of the downloadable zip file containing the coverage data
+          name: code-coverage-report
+          # The file path pattern to find and save all generated XML coverage files
+          path: "**/*coverage.opencover.xml"
