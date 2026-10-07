@@ -59,8 +59,8 @@ namespace Revo.Infrastructure
             // 4. Caching Configuration
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = configuration.GetConnectionString("Redis") ?? "localhost:6379";
-                options.InstanceName = "Revo_";
+                options.Configuration = configuration.GetConnectionString("Redis")
+                            ?? "127.0.0.1:6379,connectTimeout=1000,syncTimeout=1000,abortConnect=false"; options.InstanceName = "Revo_";
             });
             return services;
         }
