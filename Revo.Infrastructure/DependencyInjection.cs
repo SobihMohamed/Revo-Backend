@@ -55,6 +55,13 @@ namespace Revo.Infrastructure
             services.AddScoped<INotificationStrategy, TwilioWhatsAppNotificationStrategy>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IIdentityService, IdentityService>();
+
+            // 4. Caching Configuration
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = configuration.GetConnectionString("Redis") ?? "localhost:6379";
+                options.InstanceName = "Revo_";
+            });
             return services;
         }
     }

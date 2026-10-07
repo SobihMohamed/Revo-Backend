@@ -10,6 +10,7 @@
     <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MediatR" Version="14.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.12" />
     <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
   </ItemGroup>
 
