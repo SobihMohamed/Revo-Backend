@@ -6,7 +6,7 @@ namespace Revo.Application.Abstraction.Caching
 {
     public interface ICacheInvalidatorCommand
     {
-        // List of cache keys that should be cleared when this command is executed
-        string[] CacheKeysToClear { get; }
+        // List of cache groups that should be cleared when this command is executed
+        string[] CacheGroupsToClear { get; }
     }
 }
