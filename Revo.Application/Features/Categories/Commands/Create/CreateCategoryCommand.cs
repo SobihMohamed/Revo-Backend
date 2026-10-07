@@ -1,4 +1,5 @@
-﻿using Revo.Application.Dto;
+﻿using Revo.Application.Abstraction.Caching;
+using Revo.Application.Dto;
 using Revo.Domain.Shared;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace Revo.Application.Features.Categories.Commands.Create
         int OrderIndex,
         ImageUploadDto ImageUploadDto
 
-    ) : ICommand<Guid>;
+    ) : ICommand<Guid> , ICacheInvalidatorCommand
+    {
+        public string[] CacheGroupsToClear => new string[] { "Categories" };
+    }
 
 }

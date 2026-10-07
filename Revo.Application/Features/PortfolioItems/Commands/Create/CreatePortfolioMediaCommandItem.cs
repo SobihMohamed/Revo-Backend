@@ -1,4 +1,5 @@
-﻿using Revo.Application.Dto;
+﻿using Revo.Application.Abstraction.Caching;
+using Revo.Application.Dto;
 using Revo.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,8 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Create
         int OrderIndex,
         Guid CategoryId,
         List<CreatePortfolioMediaCommandItem> MediaItems
-    ) : ICommand<Guid>; 
+    ) : ICommand<Guid>, ICacheInvalidatorCommand 
+    {
+        public string[] CacheGroupsToClear => new[] { "PortfolioItems", "Categories" };
+    }
 }
