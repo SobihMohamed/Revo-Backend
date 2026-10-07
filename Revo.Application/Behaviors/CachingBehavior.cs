@@ -11,7 +11,7 @@ using static Revo.Application.Abstraction.Messaging;
 namespace Revo.Application.Behaviors
 {
     public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IQuery<TResponse>, ICacheableQuery
+        where TRequest : IRequest<TResponse>, ICacheableQuery
     {
         private readonly IDistributedCache _cache;
         public CachingBehavior(IDistributedCache cache)
