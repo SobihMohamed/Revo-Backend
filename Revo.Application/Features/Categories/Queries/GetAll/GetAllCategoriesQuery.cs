@@ -15,6 +15,6 @@ namespace Revo.Application.Features.Categories.Queries.GetAll
     {
         public string CacheGroup => "Categories";
         public string CacheKey => $"Page_{PageIndex}_Size_{PageSize}";
-        public TimeSpan? Expiration => TimeSpan.FromMinutes(30);
+        public TimeSpan? Expiration => TimeSpan.FromMinutes(15);
     }
 }
