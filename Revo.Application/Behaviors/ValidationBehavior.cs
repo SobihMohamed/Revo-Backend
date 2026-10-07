@@ -1,10 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
 using Revo.Domain.Shared;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Revo.Application.Abstraction
 {
