@@ -1,4 +1,5 @@
-﻿using Revo.Application.Dto;
+﻿using Revo.Application.Abstraction.Caching;
+using Revo.Application.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,5 +17,8 @@ namespace Revo.Application.Features.Services.Commands.Update
             string DescriptionEn,
             int OrderIndex,
             ImageUploadDto? UploadDto = null
-        ):ICommand<Guid>;
+        ):ICommand<Guid> , ICacheInvalidatorCommand
+    {
+        public string[] CacheGroupsToClear => new[] { "Services" };
+    }
 }

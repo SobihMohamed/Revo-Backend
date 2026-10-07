@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Revo.Application.Abstraction;
+using Revo.Application.Behaviors;
 using System.Reflection;
-
 namespace Revo.Application
 {
     public static class DependencyInjection
@@ -22,8 +22,12 @@ namespace Revo.Application
 
                 // add the ValidationBehavior to the MediatR pipeline
                 config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                // add the CachingBehavior to the MediatR pipeline
+                config.AddOpenBehavior(typeof(CachingBehavior<,>));
+                // add the InvalidationBehavior to the MediatR pipeline
+                config.AddOpenBehavior(typeof(InvalidationBehavior<,>));
             });
-
+          
             return services;
         }
     }

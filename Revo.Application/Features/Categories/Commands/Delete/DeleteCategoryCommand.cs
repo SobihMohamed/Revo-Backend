@@ -1,4 +1,5 @@
-﻿using Revo.Domain.Shared;
+﻿using Revo.Application.Abstraction.Caching;
+using Revo.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,5 +8,8 @@ using static Revo.Application.Abstraction.Messaging;
 
 namespace Revo.Application.Features.Categories.Commands.Delete
 {
-    public record DeleteCategoryCommand(Guid Id) : ICommand<bool>;
+    public record DeleteCategoryCommand(Guid Id) : ICommand<bool> , ICacheInvalidatorCommand
+    {
+        public string[] CacheGroupsToClear => new[] { "Categories", "PortfolioItems" };
+    }
 }
