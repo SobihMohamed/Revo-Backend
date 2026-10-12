@@ -26,7 +26,8 @@ namespace Revo.Infrastructure.ServicesImplementation
                     File = new FileDescription(fileName, fileStream),
                     Folder = "RevoAssets",
                     UseFilename = true,
-                    UniqueFilename = true
+                    UniqueFilename = true,
+                    Transformation = new Transformation().Quality("auto").FetchFormat("auto").Width(1920).Crop("limit")
                 };
 
                 var result = await _cloudinary.UploadAsync(uploadParams , cancellationToken);

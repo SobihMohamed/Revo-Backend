@@ -10,14 +10,14 @@ namespace Revo.Application.Validations
     public class ImageUploadValidator : AbstractValidator<ImageUploadDto>
     {
         private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
-        private const long _maxFileSize = 5 * 1024 * 1024;
+        private const long _maxFileSize = 10 * 1024 * 1024;
         public ImageUploadValidator()
         {
             RuleFor(u => u.Content)
                 .NotEmpty()
                 .WithMessage("Content is required.")
                 .Must(stream => stream.Length > 0).WithMessage("File cannot be empty.")
-                .Must(stream => stream.Length <= _maxFileSize).WithMessage("File size exceeds the maximum limit of 5MB.");
+                .Must(stream => stream.Length <= _maxFileSize).WithMessage("File size exceeds the maximum limit of 10MB.");
 
             RuleFor(x => x.FileName)
                         .NotEmpty().WithMessage("File name is required.")
