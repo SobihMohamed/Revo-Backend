@@ -10,11 +10,11 @@ namespace Revo.Application.Features.Categories.Specifications
     {
         public CategoryByNameSpecification(string nameAr, string nameEn)
         {
-            Query.Where(c => c.NameAr == nameAr || c.NameEn == nameEn);
+            Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && !c.IsDeleted);
         }
         public CategoryByNameSpecification(string nameAr, string nameEn, Guid excludeId)
         {
-            Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && c.Id != excludeId);
+            Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && c.Id != excludeId && !c.IsDeleted);
         }
     }
 }
