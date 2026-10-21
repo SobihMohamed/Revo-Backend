@@ -19,7 +19,8 @@ namespace Revo.Application
             services.AddMediatR(config =>
             {
                 config.RegisterServicesFromAssembly(assembly);
-
+                // add the LoggingBehavior to the MediatR pipeline
+                config.AddOpenBehavior(typeof(LoggingBehavior<,>));
                 // add the ValidationBehavior to the MediatR pipeline
                 config.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 // add the CachingBehavior to the MediatR pipeline

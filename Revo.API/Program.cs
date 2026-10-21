@@ -4,12 +4,15 @@ using Revo.Application;
 using Revo.Infrastructure;
 using Revo.Infrastructure.Implementations.Notifications;
 using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Services Registration
 builder.Services.AddControllers();
-
+// Logging Configuration
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddInfrastructureDependencies(builder.Configuration); 
 builder.Services.AddInfrastructureServices(builder.Configuration);    
@@ -32,9 +35,11 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
+
 var app = builder.Build();
 
 await Revo.Infrastructure.Database.Seeding.AdminSeeder.SeedAsync(app.Services);
+app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();
 app.UseCustomStatusCodePages();
