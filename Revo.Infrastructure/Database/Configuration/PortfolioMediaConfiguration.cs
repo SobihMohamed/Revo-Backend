@@ -20,7 +20,10 @@ namespace Revo.Infrastructure.Database.Configuration
             builder.Property(x => x.CoverImageUrl).HasMaxLength(500);
             builder.Property(x => x.CoverImagePublicId).HasMaxLength(255);
 
-            builder.Property(x => x.OrderIndex).HasDefaultValue(0); builder.Property(m => m.Type).IsRequired(); 
+            builder.Property(x => x.OrderIndex).HasDefaultValue(0);
+            builder.Property(m => m.Type).IsRequired();
+            
+            builder.HasQueryFilter(m => !m.PortfolioItem.Category.IsDeleted);
         }
     }
 }

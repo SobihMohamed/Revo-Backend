@@ -22,7 +22,7 @@ namespace Revo.Application.Behaviors
         {
             // get the request name 
             var reqName = typeof(TRequest).Name;
-            var timeStamp = DateTime.UtcNow;
+            var timeStamp = DateTime.Now;
 
             // log the request name and timestamp when it start
             _logger.LogInformation("Handling request {RequestName} at {TimeStamp}", reqName, timeStamp);
