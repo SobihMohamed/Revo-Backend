@@ -22,6 +22,7 @@ namespace Revo.Infrastructure.Database.Configuration
                    .WithOne(m => m.PortfolioItem)
                    .HasForeignKey(m => m.PortfolioItemId)
                    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasQueryFilter(p => !p.Category.IsDeleted);
         }
     }
 }
