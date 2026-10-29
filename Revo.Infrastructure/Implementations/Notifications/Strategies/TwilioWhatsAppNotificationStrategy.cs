@@ -4,8 +4,8 @@ using Revo.Application.Common.Notifications;
 using Revo.Application.Contracts.Notifications;
 using Revo.Infrastructure.Settings;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
@@ -30,9 +30,11 @@ namespace Revo.Infrastructure.Implementations.Notifications.Strategies
         public async Task SendAsync(NotificationMessage message, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(_twilioSettings.AccountSid) ||
-                string.IsNullOrWhiteSpace(_twilioSettings.AuthToken))
+                string.IsNullOrWhiteSpace(_twilioSettings.AuthToken) ||
+                string.IsNullOrWhiteSpace(_twilioSettings.TemplateSid) ||
+                string.IsNullOrWhiteSpace(_twilioSettings.MessagingServiceSid))
             {
-                _logger.LogWarning("Twilio settings are not configured. WhatsApp message was ignored.");
+                _logger.LogWarning("Twilio settings (including TemplateSid and MessagingServiceSid) are not configured properly.");
                 return;
             }
 
@@ -46,19 +48,18 @@ namespace Revo.Infrastructure.Implementations.Notifications.Strategies
 
                 var from = _twilioSettings.WhatsAppNumber;
 
-                var messageBody = $"{message.MessageAr ?? message.MessageEn}";
-
                 var messageResource = await MessageResource.CreateAsync(
-                    body: messageBody,
-                    from: new PhoneNumber(from),
-                    to: new PhoneNumber(to)
+                    to: new PhoneNumber(to),
+                    messagingServiceSid: _twilioSettings.MessagingServiceSid,
+                    contentSid: _twilioSettings.TemplateSid,
+                    contentVariables: message.MessageAr
                 );
 
-                _logger.LogInformation("WhatsApp message sent successfully. SID: {Sid}", messageResource.Sid);
+                _logger.LogInformation("WhatsApp template message sent successfully. SID: {Sid}", messageResource.Sid);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send WhatsApp message via Twilio.");
+                _logger.LogError(ex, "Failed to send WhatsApp template message via Twilio.");
             }
         }
     }

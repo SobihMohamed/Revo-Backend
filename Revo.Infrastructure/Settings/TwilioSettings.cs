@@ -10,5 +10,7 @@ namespace Revo.Infrastructure.Settings
         public string AuthToken { get; set; } = string.Empty;
         public string WhatsAppNumber { get; set; } = string.Empty;
         public string AdminPhoneNumber { get; set; } = string.Empty;
+        public string TemplateSid { get; set; } = string.Empty;
+        public string MessagingServiceSid { get; set; } = string.Empty;
     }
 }
