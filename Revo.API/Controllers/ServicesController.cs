@@ -1,0 +1,103 @@
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Revo.API.Extention;
+using Revo.API.Requests.Service;
+using Revo.API.Response.Commands;
+using Revo.API.Resposes;
+using Revo.Application.Common.Pagination;
+using Revo.Application.Features.Services.Commands.Create;
+using Revo.Application.Features.Services.Commands.Delete;
+using Revo.Application.Features.Services.Commands.Update;
+using Revo.Application.Features.Services.Dto;
+using Revo.Application.Features.Services.Queries.GetAll;
+using Revo.Application.Features.Services.Queries.GetById;
+using Revo.Application.Features.Services.Queries.Helper;
+
+namespace Revo.API.Controllers
+{
+    public class ServicesController : BaseApiControllercs
+    {
+        public ServicesController(ISender sender) : base(sender)
+        {
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ApiResponse<ActionResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Create([FromForm] CreateServiceRequest request, CancellationToken cancellationToken)
+        {
+            var command = new CreateServiceCommand(
+                request.NameAr,
+                request.NameEn,
+                request.DescriptionAr,
+                request.DescriptionEn,
+                request.OrderIndex,
+                request.Image.ToUploadDto()!
+            );
+
+            var result = await Sender.Send(command, cancellationToken);
+
+            return HandleResult<Guid, ActionResponse>(result, id => new ActionResponse(id));
+        }
+        [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ApiResponse<ActionResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(
+            [FromRoute] Guid id,
+            [FromForm] UpdateServiceRequest request,
+            CancellationToken cancellationToken)
+        {
+            // 1. Mapping from API Request to Command
+            var command = new UpdateServiceCommand(
+                id,
+                request.NameAr,
+                request.NameEn,
+                request.DescriptionAr,
+                request.DescriptionEn,
+                request.OrderIndex,
+                request.Image?.ToUploadDto() 
+            );
+
+            // 2. Dispatch to MediatR
+            var result = await Sender.Send(command, cancellationToken);
+
+            // 3. Handle Result
+            return HandleResult<Guid, ActionResponse>(result, updatedId => new ActionResponse(updatedId));
+        }
+        [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var command = new DeleteServiceCommand(id);
+            var result = await Sender.Send(command, cancellationToken);
+
+            return HandleResult(result);
+        }
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<PaginationResponse<ServiceDto>>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll([FromQuery] ServiceSpecParams specParams, CancellationToken cancellationToken)
+        {
+            var query = new GetAllServicesQuery(specParams);
+            var result = await Sender.Send(query, cancellationToken);
+
+            return HandleResult(result);
+        }
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<ServiceDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var query = new GetServiceByIdQuery(id);
+            var result = await Sender.Send(query, cancellationToken);
+
+            return HandleResult(result);
+        }
+    }
+}
