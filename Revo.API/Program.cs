@@ -31,7 +31,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:3000",
-                "https://revo-media.net" 
+                "https://revo-media.net" ,
+                "https://www.revo-media.net"
               )
         .AllowAnyHeader()
         .AllowAnyMethod()
