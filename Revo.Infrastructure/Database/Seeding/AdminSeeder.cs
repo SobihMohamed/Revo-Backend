@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Revo.Application.Contracts.Identity;
 using Revo.Application.Contracts.Repositories;
@@ -27,16 +28,19 @@ namespace Revo.Infrastructure.Database.Seeding
                 await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
             }
 
-            var adminsToSeed = new[]
-            {
-                new { Email = "admin1@revo.com", FullName = "المدير الأول", Password = "Password@123" },
-                new { Email = "admin2@revo.com", FullName = "المدير الثاني", Password = "Password@123" },
-                new { Email = "admin3@revo.com", FullName = "المدير الثالث", Password = "Password@123" }
-            };
+            var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-            foreach (var adminData in adminsToSeed)
+
+            foreach (var section in config.GetSection("SeedAdmins").GetChildren())
             {
-                var existingUser = await userManager.FindByEmailAsync(adminData.Email);
+                var email = section["Email"];
+                var fullName = section["FullName"] ?? "Admin";
+                var password = section["Password"];
+
+                if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+                    continue;
+
+                var existingUser = await userManager.FindByEmailAsync(email);
 
                 if (existingUser == null)
                 {
@@ -44,9 +48,9 @@ namespace Revo.Infrastructure.Database.Seeding
 
                     var identityResult = await identityService.RegisterAdminAsync(
                         newAdminId,
-                        adminData.Email,
-                        adminData.Password,
-                        adminData.FullName,
+                        email,
+                        password,
+                        fullName,
                         CancellationToken.None);
 
                     if (identityResult.IsSuccess)
@@ -54,12 +58,11 @@ namespace Revo.Infrastructure.Database.Seeding
                         var domainAdmin = new Admin
                         {
                             Id = newAdminId,
-                            FullName = adminData.FullName,
+                            FullName = fullName,
                             IsDeleted = false
                         };
 
                         await adminRepo.AddAsync(domainAdmin, CancellationToken.None);
-
                     }
                 }
             }
