@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,17 +40,39 @@ namespace Revo.Infrastructure
 
             services.AddRateLimiter(options =>
             {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+                options.OnRejected = async (context, token) =>
+                {
+                    if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                    {
+                        context.HttpContext.Response.Headers.RetryAfter =
+                            ((int)retryAfter.TotalSeconds).ToString();
+                    }
+
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+
+                    await context.HttpContext.Response.WriteAsJsonAsync(new
+                    {
+                        statusCode = 429,
+                        isSuccess = false,
+                        message = "Too Many Requests",
+                        data = (object?)null,
+                        errors = "لقد تجاوزت عدد المحاولات المسموح بها، برجاء المحاولة بعد دقيقة."
+                    }, token);
+                };
+
                 options.AddFixedWindowLimiter("LoginPolicy", opt =>
                 {
-                    opt.PermitLimit = 5; 
-                    opt.Window = TimeSpan.FromMinutes(1); 
+                    opt.PermitLimit = 20;
+                    opt.Window = TimeSpan.FromMinutes(1);
                     opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     opt.QueueLimit = 0;
                 });
 
                 options.AddFixedWindowLimiter("ContactRequestPolicy", opt =>
                 {
-                    opt.PermitLimit = 3;
+                    opt.PermitLimit = 20;
                     opt.Window = TimeSpan.FromMinutes(1);
                     opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     opt.QueueLimit = 0;
