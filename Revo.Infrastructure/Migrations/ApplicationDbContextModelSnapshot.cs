@@ -210,7 +210,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -233,7 +232,8 @@ namespace Revo.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NameAr")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[NameAr] IS NOT NULL");
 
                     b.HasIndex("NameEn")
                         .IsUnique();
@@ -311,7 +311,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("MessageAr")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -325,7 +324,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("TitleAr")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -352,7 +350,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CaptionAr")
-                        .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -455,7 +452,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionAr")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
@@ -475,7 +471,6 @@ namespace Revo.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -498,7 +493,8 @@ namespace Revo.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NameAr")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[NameAr] IS NOT NULL");
 
                     b.HasIndex("NameEn")
                         .IsUnique();

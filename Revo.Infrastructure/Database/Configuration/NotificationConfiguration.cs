@@ -14,13 +14,12 @@ namespace Revo.Infrastructure.Database.Configuration
             builder.ToTable("Notifications");
             builder.HasKey(n => n.Id);
 
-            builder.Property(n => n.TitleAr).IsRequired().HasMaxLength(200);
+            builder.Property(n => n.TitleAr).IsRequired(false).HasMaxLength(200);
             builder.Property(n => n.TitleEn).IsRequired().HasMaxLength(200);
-            builder.Property(n => n.MessageAr).IsRequired().HasMaxLength(500);
+            builder.Property(n => n.MessageAr).IsRequired(false).HasMaxLength(500);
             builder.Property(n => n.MessageEn).IsRequired().HasMaxLength(500);
             builder.Property(n => n.IsRead).HasDefaultValue(false);
             builder.Property(n => n.TargetUrl).HasMaxLength(500);
-
         }
     }
 }

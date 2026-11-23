@@ -14,11 +14,14 @@ namespace Revo.Infrastructure.Database.Configuration
             builder.ToTable("Categories");
             builder.HasKey(c => c.Id);
 
-            builder.HasIndex(c => c.NameAr).IsUnique();
+            builder.HasIndex(c => c.NameAr)
+                   .IsUnique()
+                   .HasFilter("[NameAr] IS NOT NULL");
+
             builder.HasIndex(c => c.NameEn).IsUnique();
 
             builder.Property(c => c.ImagePublicId).IsRequired().HasMaxLength(255);
-            builder.Property(c => c.NameAr).IsRequired().HasMaxLength(100);
+            builder.Property(c => c.NameAr).IsRequired(false).HasMaxLength(100);
             builder.Property(c => c.NameEn).IsRequired().HasMaxLength(100);
             builder.Property(c => c.ImageUrl).IsRequired().HasMaxLength(500);
             builder.Property(c => c.OrderIndex).HasDefaultValue(0);
