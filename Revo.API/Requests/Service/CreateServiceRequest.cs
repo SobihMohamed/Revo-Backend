@@ -4,14 +4,12 @@ namespace Revo.API.Requests.Service
 {
     public class CreateServiceRequest
     {
-        [Required]
-        public string NameAr { get; set; } = string.Empty;
+        public string? NameAr { get; set; }
 
         [Required]
         public string NameEn { get; set; } = string.Empty;
 
-        [Required]
-        public string DescriptionAr { get; set; } = string.Empty;
+        public string? DescriptionAr { get; set; }
 
         [Required]
         public string DescriptionEn { get; set; } = string.Empty;
@@ -20,6 +18,5 @@ namespace Revo.API.Requests.Service
 
         [Required]
         public IFormFile Image { get; set; } = null!;
-
     }
 }

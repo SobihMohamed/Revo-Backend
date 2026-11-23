@@ -15,42 +15,49 @@ namespace Revo.Application.Features.Categories.Commands.Create
     {
         private readonly IGenericRepo<Category> _categoryRepo;
         private readonly IUploadService _uploadService;
+
         public CreateCategoryCommandHandler(IGenericRepo<Category> genericRepo, IUploadService uploadService)
         {
             _categoryRepo = genericRepo;
             _uploadService = uploadService;
         }
+
         public async Task<Result<Guid>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
+            var normalizedNameAr = string.IsNullOrWhiteSpace(request.NameAr) ? null : request.NameAr.Trim();
+
             // Check for Duplicate Name using Specification
-            var spec = new CategoryByNameSpecification(request.NameAr, request.NameEn);
+            var spec = new CategoryByNameSpecification(normalizedNameAr, request.NameEn);
             var existingCategory = await _categoryRepo.FirstOrDefaultAsync(spec, cancellationToken);
 
             if (existingCategory != null)
             {
                 return Result<Guid>.Failure(new Error("Category.DuplicateName", "The category name (in Arabic or English) is already registered."));
             }
+
             // 1 - handle image upload
-            var ImageUploadResult = await _uploadService.UploadFileAsync(
+            var imageUploadResult = await _uploadService.UploadFileAsync(
                 request.ImageUploadDto.Content,
                 request.ImageUploadDto.FileName,
                 cancellationToken
             );
+
             // 2 - check if upload was successful
-            if (ImageUploadResult == null)
+            if (imageUploadResult == null)
             {
                 return Result<Guid>.Failure(new Error(
                     "Category.ImageUploadFailed",
                     "Failed to upload the category image to the server."));
             }
+
             // 3 - Create Category Entity
             var category = new Category
             {
-                NameAr = request.NameAr,
+                NameAr = normalizedNameAr,
                 NameEn = request.NameEn,
                 OrderIndex = request.OrderIndex,
-                ImageUrl = ImageUploadResult.Url,
-                ImagePublicId = ImageUploadResult.PublicId
+                ImageUrl = imageUploadResult.Url,
+                ImagePublicId = imageUploadResult.PublicId
             };
 
             // 4 - Save to Database

@@ -8,13 +8,28 @@ namespace Revo.Application.Features.Categories.Specifications
 {
     public class CategoryByNameSpecification : Specification<Category>
     {
-        public CategoryByNameSpecification(string nameAr, string nameEn)
+        public CategoryByNameSpecification(string? nameAr, string nameEn)
         {
-            Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && !c.IsDeleted);
+            if (string.IsNullOrWhiteSpace(nameAr))
+            {
+                Query.Where(c => c.NameEn == nameEn && !c.IsDeleted);
+            }
+            else
+            {
+                Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && !c.IsDeleted);
+            }
         }
-        public CategoryByNameSpecification(string nameAr, string nameEn, Guid excludeId)
+
+        public CategoryByNameSpecification(string? nameAr, string nameEn, Guid excludeId)
         {
-            Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && c.Id != excludeId && !c.IsDeleted);
+            if (string.IsNullOrWhiteSpace(nameAr))
+            {
+                Query.Where(c => c.NameEn == nameEn && c.Id != excludeId && !c.IsDeleted);
+            }
+            else
+            {
+                Query.Where(c => (c.NameAr == nameAr || c.NameEn == nameEn) && c.Id != excludeId && !c.IsDeleted);
+            }
         }
     }
 }
