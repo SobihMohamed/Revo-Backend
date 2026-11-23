@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 using Revo.Application.Features.Services.Dto;
-using Revo.Application.Features.Services.Queries.Helper; 
+using Revo.Application.Features.Services.Queries.Helper;
 using Revo.Domain.Entities;
 
 namespace Revo.Application.Features.Services.Specifications
@@ -12,7 +12,7 @@ namespace Revo.Application.Features.Services.Specifications
             // 1. Filtering (Search)
             if (!string.IsNullOrEmpty(specParams.Search))
             {
-                Query.Where(x => x.NameAr.Contains(specParams.Search) ||
+                Query.Where(x => (x.NameAr != null && x.NameAr.Contains(specParams.Search)) ||
                                  x.NameEn.Contains(specParams.Search));
             }
 
@@ -23,10 +23,10 @@ namespace Revo.Application.Features.Services.Specifications
                     Query.OrderByDescending(x => x.Id);
                     break;
                 case ServiceSortOption.NameAsc:
-                    Query.OrderBy(x => x.NameAr);
+                    Query.OrderBy(x => x.NameEn);
                     break;
                 case ServiceSortOption.NameDesc:
-                    Query.OrderByDescending(x => x.NameAr);
+                    Query.OrderByDescending(x => x.NameEn);
                     break;
                 case ServiceSortOption.OrderAsc:
                 default:

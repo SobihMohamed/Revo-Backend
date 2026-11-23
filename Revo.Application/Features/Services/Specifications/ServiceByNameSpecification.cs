@@ -8,14 +8,28 @@ namespace Revo.Application.Features.Services.Specifications
 {
     public class ServiceByNameSpecification : Specification<Service>
     {
-        public ServiceByNameSpecification(string nameAr, string nameEn)
+        public ServiceByNameSpecification(string? nameAr, string nameEn)
         {
-            Query.Where(s => s.NameAr == nameAr || s.NameEn == nameEn);
+            if (string.IsNullOrWhiteSpace(nameAr))
+            {
+                Query.Where(s => s.NameEn == nameEn);
+            }
+            else
+            {
+                Query.Where(s => s.NameAr == nameAr || s.NameEn == nameEn);
+            }
         }
 
-        public ServiceByNameSpecification(string nameAr, string nameEn, Guid excludeId)
+        public ServiceByNameSpecification(string? nameAr, string nameEn, Guid excludeId)
         {
-            Query.Where(s => (s.NameAr == nameAr || s.NameEn == nameEn) && s.Id != excludeId);
+            if (string.IsNullOrWhiteSpace(nameAr))
+            {
+                Query.Where(s => s.NameEn == nameEn && s.Id != excludeId);
+            }
+            else
+            {
+                Query.Where(s => (s.NameAr == nameAr || s.NameEn == nameEn) && s.Id != excludeId);
+            }
         }
     }
 }
