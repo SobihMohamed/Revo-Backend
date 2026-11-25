@@ -14,7 +14,7 @@ namespace Revo.Infrastructure.Database.Configuration
             builder.ToTable("PortfolioItems");
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.CaptionAr).IsRequired().HasMaxLength(250);
+            builder.Property(p => p.CaptionAr).IsRequired(false).HasMaxLength(250);
             builder.Property(p => p.CaptionEn).IsRequired().HasMaxLength(250);
             builder.Property(p => p.OrderIndex).HasDefaultValue(0);
 

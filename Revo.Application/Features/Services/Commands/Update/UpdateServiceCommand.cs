@@ -8,16 +8,15 @@ using static Revo.Application.Abstraction.Messaging;
 
 namespace Revo.Application.Features.Services.Commands.Update
 {
-    public record UpdateServiceCommand
-        (
-            Guid Id,
-            string NameAr,
-            string NameEn,
-            string DescriptionAr,
-            string DescriptionEn,
-            int OrderIndex,
-            ImageUploadDto? UploadDto = null
-        ):ICommand<Guid> , ICacheInvalidatorCommand
+    public record UpdateServiceCommand(
+        Guid Id,
+        string? NameAr,
+        string NameEn,
+        string? DescriptionAr,
+        string DescriptionEn,
+        int OrderIndex,
+        ImageUploadDto? UploadDto = null
+    ) : ICommand<Guid>, ICacheInvalidatorCommand
     {
         public string[] CacheGroupsToClear => new[] { "Services" };
     }

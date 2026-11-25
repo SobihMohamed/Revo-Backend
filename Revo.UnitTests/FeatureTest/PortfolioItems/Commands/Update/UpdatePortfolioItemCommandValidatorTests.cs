@@ -21,11 +21,11 @@ namespace Revo.UnitTests.FeatureTest.PortfolioItems.Commands.Update
         }
 
         [Fact]
-        public void Should_Have_Error_When_CaptionAr_Is_Empty()
+        public void Should_Not_Have_Error_When_CaptionAr_Is_Empty()
         {
             var command = new UpdatePortfolioItemCommand(Guid.NewGuid(), "", "En", 1, Guid.NewGuid(), new List<UpdatePortfolioMediaCommandItem> { CreateValidMediaItem() });
             var result = _validator.TestValidate(command);
-            result.ShouldHaveValidationErrorFor(x => x.CaptionAr);
+            result.ShouldNotHaveValidationErrorFor(x => x.CaptionAr);
         }
 
         [Fact]

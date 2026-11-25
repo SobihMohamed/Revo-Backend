@@ -61,7 +61,7 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Create
                 }
                 var protofolioItem = new PortfolioItem
                 {
-                    CaptionAr = request.CaptionAr,
+                    CaptionAr = string.IsNullOrWhiteSpace(request.CaptionAr) ? null : request.CaptionAr.Trim(),
                     CaptionEn = request.CaptionEn,
                     OrderIndex = request.OrderIndex,
                     CategoryId = request.CategoryId,

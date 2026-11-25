@@ -47,7 +47,7 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
         }
 
         [Fact]
-        public void Should_Have_Error_When_NameAr_Is_Empty()
+        public void Should_Not_Have_Error_When_NameAr_Is_Empty()
         {
             // Arrange
             var command = new UpdateServiceCommand(Guid.NewGuid(), "", "NameEn", "DescAr", "DescEn", 1, null);
@@ -56,8 +56,7 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Update
             var result = _validator.TestValidate(command);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(x => x.NameAr)
-                  .WithErrorMessage("Arabic name is required.");
+            result.ShouldNotHaveValidationErrorFor(x => x.NameAr);
         }
 
         [Fact]
