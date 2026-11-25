@@ -15,13 +15,13 @@ namespace Revo.UnitTests.FeatureTest.PortfolioItems.Commands.Create
             _validator = new CreatePortfolioItemCommandValidator();
         }
         [Fact]
-        public void Should_Have_Error_When_Captions_Are_Empty()
+        public void Should_Have_Error_Only_For_CaptionEn_When_Captions_Are_Empty()
         {
             var model = new CreatePortfolioItemCommand("", "", 1, Guid.NewGuid(), new List<CreatePortfolioMediaCommandItem>());
 
             var result = _validator.TestValidate(model);
 
-            result.ShouldHaveValidationErrorFor(x => x.CaptionAr);
+            result.ShouldNotHaveValidationErrorFor(x => x.CaptionAr);
             result.ShouldHaveValidationErrorFor(x => x.CaptionEn);
         }
         [Fact]

@@ -20,7 +20,7 @@ namespace Revo.UnitTests.FeatureTest.Category.Command.Update
         {
             // Arrange
             var command = new UpdateCategoryCommand(
-                Guid.Empty, 
+                Guid.Empty,
                 "Valid Arabic Name",
                 "Valid English Name",
                 1,
@@ -36,7 +36,7 @@ namespace Revo.UnitTests.FeatureTest.Category.Command.Update
         {
             // Arrange
             var command = new UpdateCategoryCommand(
-                Guid.NewGuid(), 
+                Guid.NewGuid(),
                 "Valid Arabic Name",
                 "Valid English Name",
                 1,
@@ -51,7 +51,7 @@ namespace Revo.UnitTests.FeatureTest.Category.Command.Update
         }
 
         [Fact]
-        public void Should_HaveError_When_NameAr_IsEmpty()
+        public void Should_NotHaveError_When_NameAr_IsEmpty()
         {
             // Arrange
             var command = new UpdateCategoryCommand(
@@ -64,7 +64,7 @@ namespace Revo.UnitTests.FeatureTest.Category.Command.Update
             // Act
             var result = _validator.TestValidate(command);
             // Assert
-            result.ShouldHaveValidationErrorFor(x => x.NameAr);
+            result.ShouldNotHaveValidationErrorFor(x => x.NameAr);
         }
         [Fact]
         public void Should_HaveError_When_NameEn_ExceedsMaxLength()

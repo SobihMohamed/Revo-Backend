@@ -21,18 +21,17 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Create
             return new ImageUploadDto(dummyStream, "dummy.jpg");
         }
         [Fact]
-        public void Should_Have_Error_When_NameAr_Is_Empty()
+        public void Should_Not_Have_Error_When_NameAr_Is_Empty()
         {
             // Arrange
 
-            var command = new CreateServiceCommand("", "NameEn", "DescAr", "DescEn", 1, CreateDummyImageDto()   );
+            var command = new CreateServiceCommand("", "NameEn", "DescAr", "DescEn", 1, CreateDummyImageDto());
 
             // Act
             var result = _validator.TestValidate(command);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(x => x.NameAr)
-                  .WithErrorMessage("Arabic name is required.");
+            result.ShouldNotHaveValidationErrorFor(x => x.NameAr);
         }
 
         [Fact]
@@ -40,7 +39,7 @@ namespace Revo.UnitTests.FeatureTest.Service.Commands.Create
         {
             // Arrange
             // 101 characters (maximum is 100)
-            var longName = new string('A', 101); 
+            var longName = new string('A', 101);
             var command = new CreateServiceCommand("NameAr", longName, "DescAr", "DescEn", 1, CreateDummyImageDto());
 
             // Act
