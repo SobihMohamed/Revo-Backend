@@ -29,12 +29,12 @@ namespace Revo.Application.Features.ContactRequests.Events
         {
             var request = notificationEvent.ContactRequest;
 
-            string serviceName = "خدمة غير محددة";
+            string serviceName = "No service Available";
 
             if (request.ServiceId.HasValue)
             {
                 var serviceDto = await _serviceRepo.FirstOrDefaultAsync(new ServiceByIdSpecification(request.ServiceId.Value), cancellationToken);
-                serviceName = serviceDto?.NameAr ?? "خدمة غير محددة";
+                serviceName = serviceDto?.NameEn ?? "No service Available";
             }
 
             var dbNotification = new Notification

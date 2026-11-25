@@ -17,41 +17,49 @@ namespace Revo.Application.Features.Services.Commands.Update
         private readonly IGenericRepo<Service> _serviceRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUploadService _uploadService;
+
         public UpdateServiceCommandHandler(IGenericRepo<Service> serviceRepo, IUnitOfWork unitOfWork, IUploadService uploadService)
         {
             _serviceRepo = serviceRepo;
             _unitOfWork = unitOfWork;
             _uploadService = uploadService;
         }
+
         public async Task<Result<Guid>> Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
         {
-            var spec = new ServiceByNameSpecification(request.NameAr, request.NameEn, request.Id);
+            var normalizedNameAr = string.IsNullOrWhiteSpace(request.NameAr) ? null : request.NameAr.Trim();
+            var normalizedDescriptionAr = string.IsNullOrWhiteSpace(request.DescriptionAr) ? null : request.DescriptionAr.Trim();
 
-            var existingService = await _serviceRepo.FirstOrDefaultAsync(spec,cancellationToken);
+            var spec = new ServiceByNameSpecification(normalizedNameAr, request.NameEn, request.Id);
+
+            var existingService = await _serviceRepo.FirstOrDefaultAsync(spec, cancellationToken);
 
             if (existingService != null)
             {
                 return Result<Guid>.Failure(new Error("Service.DuplicateName", "The service name (in Arabic or English) is already registered."));
             }
+
             // check if service exists
             var service = await _serviceRepo.GetByIdAsync(request.Id, cancellationToken);
-            if(service == null)
+            if (service == null)
                 return Result<Guid>.Failure(new Error("Service.NotFound", "Service not found"));
+
             // update service properties
-            service.NameAr = request.NameAr;
+            service.NameAr = normalizedNameAr;
             service.NameEn = request.NameEn;
-            service.DescriptionAr = request.DescriptionAr;
+            service.DescriptionAr = normalizedDescriptionAr;
             service.DescriptionEn = request.DescriptionEn;
             service.OrderIndex = request.OrderIndex;
 
             string? publicIdToDelete = null;
             string? publicIdToRollback = null;
+
             // check if upload new image
             if (request.UploadDto != null)
             {
                 publicIdToDelete = service.ImagePublicId;
                 // upload new image
-                var uploadResult = await _uploadService.UploadFileAsync(request.UploadDto.Content,request.UploadDto.FileName, cancellationToken);
+                var uploadResult = await _uploadService.UploadFileAsync(request.UploadDto.Content, request.UploadDto.FileName, cancellationToken);
                 if (uploadResult == null)
                     return Result<Guid>.Failure(new Error("Service.ImageUploadFailed", "Image upload failed"));
                 publicIdToRollback = uploadResult.PublicId;
@@ -59,6 +67,7 @@ namespace Revo.Application.Features.Services.Commands.Update
                 service.ImageUrl = uploadResult.Url;
                 service.ImagePublicId = uploadResult.PublicId;
             }
+
             try
             {
                 await _serviceRepo.UpdateAsync(service, cancellationToken);

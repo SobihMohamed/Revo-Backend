@@ -9,13 +9,12 @@ namespace Revo.Application.Features.Categories.Commands.Update
 {
     public record UpdateCategoryCommand(
         Guid Id,
-        string NameAr,
+        string? NameAr,
         string NameEn,
         int OrderIndex,
         ImageUploadDto? ImageUploadDto
-        ) : ICommand<Guid>, ICacheInvalidatorCommand
+    ) : ICommand<Guid>, ICacheInvalidatorCommand
     {
         public string[] CacheGroupsToClear => new[] { "Categories", "PortfolioItems" };
     }
-
 }

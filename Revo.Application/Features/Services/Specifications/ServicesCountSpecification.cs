@@ -14,7 +14,7 @@ namespace Revo.Application.Features.Services.Specifications
         {
             if (!string.IsNullOrEmpty(specParams.Search))
             {
-                Query.Where(x => x.NameAr.Contains(specParams.Search) ||
+                Query.Where(x => (x.NameAr != null && x.NameAr.Contains(specParams.Search)) ||
                                  x.NameEn.Contains(specParams.Search));
             }
         }

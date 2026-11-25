@@ -24,7 +24,7 @@ namespace Revo.Application.Features.Notifications.Commands.MarkAsRead
             var notification = await _notificationRepo.GetByIdAsync(request.Id, cancellationToken);
 
             if (notification == null)
-                return Result<bool>.Failure(new Error("Notification.NotFound", "الإشعار غير موجود"));
+                return Result<bool>.Failure(new Error("Notification.NotFound", "Notification Not Found"));
 
             if (notification.IsRead)
                 return Result<bool>.Success(true);

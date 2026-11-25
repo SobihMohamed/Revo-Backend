@@ -40,8 +40,8 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Create
             public CreatePortfolioItemCommandValidator()
             {
                 RuleFor(x => x.CaptionAr)
-                    .NotEmpty().WithMessage("Arabic caption is required.")
-                    .MaximumLength(200);
+                    .MaximumLength(200)
+                    .When(x => !string.IsNullOrWhiteSpace(x.CaptionAr));
 
                 RuleFor(x => x.CaptionEn)
                     .NotEmpty().WithMessage("English caption is required.")

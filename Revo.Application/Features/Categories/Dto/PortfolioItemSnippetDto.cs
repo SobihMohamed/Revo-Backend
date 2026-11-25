@@ -6,7 +6,7 @@ namespace Revo.Application.Features.Categories.Dto
 {
     public record PortfolioItemSnippetDto(
         Guid Id,
-        string CaptionAr,
+        string? CaptionAr,
         string CaptionEn,
         int OrderIndex,
         string MainImageUrl

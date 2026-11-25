@@ -11,14 +11,12 @@ namespace Revo.Application.Features.Categories.Commands.Create
 {
     public record CreateCategoryCommand
     (
-        string NameAr,
+        string? NameAr,
         string NameEn,
         int OrderIndex,
         ImageUploadDto ImageUploadDto
-
-    ) : ICommand<Guid> , ICacheInvalidatorCommand
+    ) : ICommand<Guid>, ICacheInvalidatorCommand
     {
         public string[] CacheGroupsToClear => new string[] { "Categories" };
     }
-
 }

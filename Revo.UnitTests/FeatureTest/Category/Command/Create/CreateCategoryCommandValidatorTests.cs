@@ -16,7 +16,7 @@ namespace Revo.UnitTests.FeatureTest.Category.Command.Create
         }
 
         [Fact]
-        public void Should_HaveError_When_NameAr_IsEmpty()
+        public void Should_NotHaveError_When_NameAr_IsEmpty()
         {
             // Arrange
             using var stream = new MemoryStream(new byte[] { 0x01 });
@@ -34,7 +34,7 @@ namespace Revo.UnitTests.FeatureTest.Category.Command.Create
             var result = _validator.TestValidate(command);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(x => x.NameAr);
+            result.ShouldNotHaveValidationErrorFor(x => x.NameAr);
         }
         [Fact]
         public void Should_HaveError_When_NameEn_ExceedsMaxLength()

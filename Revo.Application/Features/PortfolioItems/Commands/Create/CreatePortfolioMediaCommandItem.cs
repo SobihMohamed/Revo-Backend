@@ -16,12 +16,12 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Create
          ImageUploadDto? CoverImage
      );
     public record CreatePortfolioItemCommand(
-        string CaptionAr,
+        string? CaptionAr,
         string CaptionEn,
         int OrderIndex,
         Guid CategoryId,
         List<CreatePortfolioMediaCommandItem> MediaItems
-    ) : ICommand<Guid>, ICacheInvalidatorCommand 
+    ) : ICommand<Guid>, ICacheInvalidatorCommand
     {
         public string[] CacheGroupsToClear => new[] { "PortfolioItems", "Categories" };
     }

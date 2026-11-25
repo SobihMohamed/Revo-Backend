@@ -9,13 +9,13 @@ using static Revo.Application.Abstraction.Messaging;
 namespace Revo.Application.Features.Services.Commands.Create
 {
     public record CreateServiceCommand(
-        string NameAr,
+        string? NameAr,
         string NameEn,
-        string DescriptionAr,
+        string? DescriptionAr,
         string DescriptionEn,
         int OrderIndex,
         ImageUploadDto UploadDto
-        ): ICommand<Guid>, ICacheInvalidatorCommand
+    ) : ICommand<Guid>, ICacheInvalidatorCommand
     {
         public string[] CacheGroupsToClear => new[] { "Services" };
     }

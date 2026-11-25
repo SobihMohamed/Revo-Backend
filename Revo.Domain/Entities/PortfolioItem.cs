@@ -7,7 +7,7 @@ namespace Revo.Domain.Entities
 {
     public class PortfolioItem : AuditableEntity<Guid>
     {
-        public string CaptionAr { get; set; } = string.Empty;
+        public string? CaptionAr { get; set; }
         public string CaptionEn { get; set; } = string.Empty;
         public int OrderIndex { get; set; }
 

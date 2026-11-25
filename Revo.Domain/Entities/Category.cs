@@ -8,7 +8,7 @@ namespace Revo.Domain.Entities
 {
     public class Category : AuditableEntity<Guid>, ISoftDeletable
     {
-        public string NameAr { get; set; } = string.Empty;
+        public string? NameAr { get; set; }
         public string NameEn { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public string ImagePublicId { get; set; } = string.Empty;

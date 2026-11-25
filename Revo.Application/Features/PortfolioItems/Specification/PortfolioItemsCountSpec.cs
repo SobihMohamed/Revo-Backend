@@ -14,7 +14,7 @@ namespace Revo.Application.Features.PortfolioItems.Specification
             Query.Where(p =>
                  (!portfolioItemSpec.CategoryId.HasValue || p.CategoryId == portfolioItemSpec.CategoryId) &&
                  (string.IsNullOrEmpty(portfolioItemSpec.Search) ||
-                  p.CaptionAr.ToLower().Contains(portfolioItemSpec.Search) ||
+                  (p.CaptionAr != null && p.CaptionAr.ToLower().Contains(portfolioItemSpec.Search)) ||
                   p.CaptionEn.ToLower().Contains(portfolioItemSpec.Search))
              );
         }

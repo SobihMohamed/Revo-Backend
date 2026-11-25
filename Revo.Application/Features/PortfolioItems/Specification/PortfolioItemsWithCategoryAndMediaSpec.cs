@@ -16,7 +16,7 @@ namespace Revo.Application.Features.PortfolioItems.Specification
             Query.Where(p =>
                 (!specParams.CategoryId.HasValue || p.CategoryId == specParams.CategoryId) &&
                 (string.IsNullOrEmpty(specParams.Search) ||
-                 p.CaptionAr.ToLower().Contains(specParams.Search) ||
+                 (p.CaptionAr != null && p.CaptionAr.ToLower().Contains(specParams.Search)) ||
                  p.CaptionEn.ToLower().Contains(specParams.Search))
             );
 
