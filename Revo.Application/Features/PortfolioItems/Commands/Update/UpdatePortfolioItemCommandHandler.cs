@@ -139,7 +139,7 @@ namespace Revo.Application.Features.PortfolioItems.Commands.Update
         }
         private void UpdateBasicDetails(PortfolioItem portfolioItem, UpdatePortfolioItemCommand request)
         {
-            portfolioItem.CaptionAr = request.CaptionAr;
+            portfolioItem.CaptionAr = string.IsNullOrWhiteSpace(request.CaptionAr) ? null : request.CaptionAr.Trim();
             portfolioItem.CaptionEn = request.CaptionEn;
             portfolioItem.OrderIndex = request.OrderIndex;
             portfolioItem.CategoryId = request.CategoryId;

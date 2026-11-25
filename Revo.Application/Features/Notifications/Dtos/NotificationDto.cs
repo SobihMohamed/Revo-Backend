@@ -7,9 +7,9 @@ namespace Revo.Application.Features.Notifications.Dtos
     public class NotificationDto
     {
         public Guid Id { get; set; }
-        public string TitleAr { get; set; } = string.Empty;
+        public string? TitleAr { get; set; }
         public string TitleEn { get; set; } = string.Empty;
-        public string MessageAr { get; set; } = string.Empty;
+        public string? MessageAr { get; set; }
         public string MessageEn { get; set; } = string.Empty;
         public string? TargetUrl { get; set; }
         public bool IsRead { get; set; }
